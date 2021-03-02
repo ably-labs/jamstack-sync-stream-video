@@ -9,6 +9,7 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
+    "@tailwindcss/forms": "^0.2.1",
     "core-js": "^3.8.3",
     "nuxt": "^2.14.12",
     "vue-video-player": "^5.0.2"
