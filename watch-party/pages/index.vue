@@ -1,34 +1,35 @@
 <template>
   <div class="container">
-    <div>
-      <Logo />
-      <h1 class="title bg-indigo-900">
-        watch-party
-      </h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
-    </div>
+    <button
+      class="bg-gray-800 p-2 m-auto text-white hover:bg-gray-900"
+      @click="createRoom"
+    >
+      Create a private watch party
+    </button>
   </div>
 </template>
 
 <script>
-export default {};
+import { mapGetters, mapActions } from "vuex";
+
+export default {
+  data() {
+    return {};
+  },
+  created() {
+    console.log("first this");
+    this.instantiateAbly();
+  },
+  computed: {
+    ...mapGetters([""])
+  },
+  methods: {
+    ...mapActions(["instantiateAbly", "generateWatchPartyCode"]),
+    createRoom() {
+      this.generateWatchPartyCode();
+    }
+  }
+};
 </script>
 
 <style>
