@@ -7,6 +7,7 @@
         placeholder="Enter your username"
         v-model="username"
         :disabled="isCreatingRoom"
+        @keyup.enter="createRoom()"
       />
     </div>
     <div class="block">
