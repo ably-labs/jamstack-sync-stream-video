@@ -27,21 +27,11 @@
     <NuxtLink v-if="showBrowseLink" to="/gallery"
       >Pick a video to watch <font-awesome-icon :icon="['fas', 'video']"
     /></NuxtLink>
-    <!-- <div class="block">
-      <button
-        v-if="showBrowseButton"
-        class="rounded bg-transparent p-2 m-auto text-gray-800 hover:text-black w-64"
-        @click="browseVideos()"
-      >
-        Pick a video to watch
-        <font-awesome-icon :icon="['fas', 'video']" />
-      </button>
-    </div> -->
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 
 export default {
   data() {
@@ -52,17 +42,18 @@ export default {
       shouldShowCode: false,
       copyClicked: null,
       baseShareLink: null,
-      showBrowseLink: false
+      showBrowseLink: false,
+      isAdmin: null,
+      shareableLink: null
     };
   },
   created() {
     if (process.browser) {
-      console.log("this is a browser");
       this.baseShareLink = window.location.href + "room/";
     }
   },
   computed: {
-    ...mapGetters(["showShareableCodeStatus", "watchPartyRoomCode"]),
+    ...mapGetters(["showShareableCodeStatus", "getWatchPartyRoomCode"]),
     btnDisabled() {
       return (
         (this.username == null || this.isCreatingRoom) && !this.shouldShowCode
@@ -79,6 +70,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(["setShareableLink"]),
     ...mapActions([
       "instantiateAbly",
       "generateWatchPartyCode",
@@ -88,7 +80,8 @@ export default {
       console.log("creating..");
       this.btnText = "Creating your watch party...";
       this.isCreatingRoom = true;
-      this.instantiateAbly(this.username);
+      this.isAdmin = true;
+      this.instantiateAbly({ username: this.username, isAdmin: this.isAdmin });
       this.generateWatchPartyCode();
     },
     copyBtnClicked() {
@@ -99,14 +92,12 @@ export default {
         this.copyClicked = false;
         this.btnText = "Copy shareable link";
       }, 2000);
-      navigator.clipboard.writeText(
-        this.baseShareLink + this.watchPartyRoomCode
-      );
+      this.shareableLink = this.baseShareLink + this.getWatchPartyRoomCode;
+      navigator.clipboard.writeText(this.shareableLink);
+      this.setShareableLink(this.shareableLink);
     }
   },
-  destroyed() {
-    this.disconnectAbly();
-  }
+  destroyed() {}
 };
 </script>
 

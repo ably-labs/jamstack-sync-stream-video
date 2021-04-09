@@ -7,10 +7,15 @@
     </div>
     <div
       class="mt-3 border border-gray-500 rounded rounded-b-none comments-box overflow-y-scroll"
+      ref="commentsBox"
     >
       <ul>
-        <li v-for="item in commLoop" :key="item">
-          <SingleComment></SingleComment>
+        <li v-for="comment in commentsArray" :key="comment.msgId">
+          <SingleComment
+            :message="comment.content"
+            :timestamp="comment.timestamp"
+            :username="comment.username"
+          ></SingleComment>
         </li>
       </ul>
     </div>
@@ -22,10 +27,14 @@
           type="text"
           class="block w-full rounded bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0"
           placeholder="Enter a comment..."
+          v-model="commentMsg"
         />
       </div>
       <div class="">
-        <button class="bg-gray-800 p-2 m-auto text-white hover:bg-gray-900">
+        <button
+          class="bg-gray-800 p-2 m-auto text-white hover:bg-gray-900"
+          @click="publishMessage()"
+        >
           SEND
         </button>
       </div>
@@ -35,6 +44,7 @@
 
 <script>
 import SingleComment from "/components/Comments/SingleComment.vue";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "CommentsList",
@@ -43,8 +53,78 @@ export default {
   },
   data() {
     return {
-      commLoop: [1, 2, 3, 4, 5, 6, 7, 8]
+      commentMsg: "",
+      commentsArray: [],
+      messageTime12HrFormat: null,
+      messageTime24HrFormat: null,
+      channelsSubscribed: false
     };
+  },
+  computed: {
+    ...mapGetters([
+      "getPartyChInstance",
+      "getCommentsChInstance",
+      "getUsername",
+      "getAblyConnectionStatus"
+    ])
+  },
+  watch: {
+    getAblyConnectionStatus: function(newStatus, oldStatus) {
+      console.log("ok ready" + newStatus + oldStatus);
+      this.ablyConnectionStatus = newStatus;
+      if (newStatus && !this.channelsSubscribed) {
+        this.subscribeToChannels();
+      }
+    }
+  },
+  methods: {
+    publishMessage() {
+      this.getCommentsChInstance.publish(
+        "comment",
+        { username: this.getUsername, content: this.commentMsg },
+        msg => {
+          console.log("Publish called with msg: " + msg);
+        }
+      );
+    },
+    async handleNewComment(msg) {
+      const username = msg.data.username;
+      const content = msg.data.content;
+      const timestamp = this.formatTime(msg.timestamp);
+      const msgId = msg.id;
+      await this.commentsArray.push({
+        username,
+        content,
+        timestamp,
+        msgId
+      });
+      const divScrollHeight = this.$refs.commentsBox.scrollHeight;
+      this.$refs.commentsBox.scrollTop = divScrollHeight;
+    },
+    formatTime(timestamp) {
+      const messageTime24HrFormat = new Date(timestamp);
+      let hours = messageTime24HrFormat.getHours();
+      let minutes = messageTime24HrFormat.getMinutes();
+      minutes = (minutes < 10 ? "0" : "") + minutes;
+      let ampm = hours < 12 ? "am" : "pm";
+      hours = hours % 12 || 12;
+      this.messageTime12HrFormat = `${hours}:${minutes} ${ampm}`;
+      return this.messageTime12HrFormat;
+    },
+    subscribeToChannels() {
+      this.getCommentsChInstance.subscribe(msg => {
+        this.handleNewComment(msg);
+      });
+      this.getPartyChInstance.subscribe(msg => {
+        console.log("party channel message", msg);
+      });
+      this.channelsSubscribed = true;
+    }
+  },
+  created() {
+    if (this.getAblyConnectionStatus) {
+      this.subscribeToChannels();
+    }
   }
 };
 </script>

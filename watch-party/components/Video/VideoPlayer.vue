@@ -1,7 +1,7 @@
 <template>
-  <section class="ml-6 w-11/12 container">
+  <section class="">
     <div
-      class="video-player-box  vjs-big-play-centered vjs-16-9"
+      class="video-player-box  vjs-big-play-centered vjs-16-9 border-2 border-black"
       :playsinline="playsinline"
       @play="onPlayerPlay($event)"
       @pause="onPlayerPause($event)"
@@ -26,7 +26,7 @@ export default {
     return {
       playsinline: true,
       playerOptions: {
-        //player configuration
+        //player configuration ml-6 w-11/12 container
         muted: false, //whether to mute
         language: "en",
         fluid: true,
@@ -79,7 +79,7 @@ export default {
       // console.log('player Timeupdate!', player.currentTime())
     },
     onPlayerCanplay(player) {
-      console.log("player Canplay!", player);
+      // console.log("player Canplay!", player);
     },
     onPlayerCanplaythrough(player) {
       // console.log('player Canplaythrough!', player)
