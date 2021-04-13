@@ -28,6 +28,7 @@
           class="block w-full rounded bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0"
           placeholder="Enter a comment..."
           v-model="commentMsg"
+          @keyup.enter="publishMessage()"
         />
       </div>
       <div class="">
@@ -86,6 +87,7 @@ export default {
           console.log("Publish called with msg: " + msg);
         }
       );
+      this.commentMsg = "";
     },
     async handleNewComment(msg) {
       const username = msg.data.username;
