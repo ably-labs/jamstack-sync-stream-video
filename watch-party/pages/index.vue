@@ -71,18 +71,13 @@ export default {
   },
   methods: {
     ...mapMutations(["setShareableLink"]),
-    ...mapActions([
-      "instantiateAbly",
-      "generateWatchPartyCode",
-      "disconnectAbly"
-    ]),
+    ...mapActions(["instantiateAbly", "disconnectAbly"]),
     createRoom() {
       console.log("creating..");
       this.btnText = "Creating your watch party...";
       this.isCreatingRoom = true;
       this.isAdmin = true;
       this.instantiateAbly({ username: this.username, isAdmin: this.isAdmin });
-      this.generateWatchPartyCode();
     },
     copyBtnClicked() {
       this.copyClicked = true;

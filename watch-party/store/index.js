@@ -25,7 +25,8 @@ const createStore = () => {
       presenceCount: 0,
       didAdminChooseVideo: false,
       chosenVideoRef: null,
-      didAdminLeave: false
+      didAdminLeave: false,
+      onlineMembersArr: []
     },
 
     getters: {
@@ -75,6 +76,9 @@ const createStore = () => {
         console.log(link);
         state.shareableLink = link;
       },
+      setPresenceCount(state, count) {
+        state.presenceCount = count;
+      },
       setPresenceIncrement(state) {
         state.presenceCount++;
       },
@@ -83,6 +87,17 @@ const createStore = () => {
       },
       setAdminLeaveStatus(state) {
         state.didAdminLeave = true;
+      },
+      addToOnlineMembersArr(state, memberObj) {
+        state.onlineMembersArr.push(memberObj);
+      },
+      removeFromOnlineMembersArr(state, clientId) {
+        state.onlineMembersArr.splice(
+          state.onlineMembersArr.findIndex(
+            presenceEntry => presenceEntry.id === clientId
+          ),
+          1
+        );
       }
     },
 
@@ -101,21 +116,28 @@ const createStore = () => {
           );
           vueContext.commit("setUsername", username);
           vueContext.commit("setAdminStatus", isAdmin);
+          if (isAdmin) {
+            vueContext.dispatch("generateWatchPartyCode");
+          }
           vueContext.dispatch("attachToChannels");
+          vueContext.dispatch("getExistingPresenceSet");
           vueContext.dispatch("subscribeToPresence");
           vueContext.dispatch("enterClientInPresenceSet");
         });
       },
       attachToChannels(vueContext) {
         const mainParty = this.state.ablyRealtimeInstance.channels.get(
-          this.state.channelNames.mainParty
+          this.state.channelNames.mainParty +
+            "-" +
+            this.state.watchPartyRoomCode
         );
 
         const comments = this.state.ablyRealtimeInstance.channels.get(
-          this.state.channelNames.comments
+          this.state.channelNames.comments + "-" + this.state.watchPartyRoomCode
         );
+        console.log(comments);
         const video = this.state.ablyRealtimeInstance.channels.get(
-          this.state.channelNames.video
+          this.state.channelNames.video + "-" + this.state.watchPartyRoomCode
         );
         vueContext.commit("setAblyChannelInstances", {
           mainParty,
@@ -123,22 +145,56 @@ const createStore = () => {
           video
         });
       },
+      getExistingPresenceSet(vueContext) {
+        this.state.channelInstances.mainParty.presence.get((err, members) => {
+          if (!err) {
+            for (let i = 0; i < members.length; i++) {
+              let { username, isAdmin } = members[i].data;
+              vueContext.commit("addToOnlineMembersArr", {
+                clientId: members[i].clientId,
+                username,
+                isAdmin
+              });
+            }
+            vueContext.commit("setPresenceCount", members.length);
+          } else {
+            console.log(err);
+          }
+        });
+      },
       subscribeToPresence(vueContext) {
         this.state.channelInstances.mainParty.presence.subscribe(
           "enter",
           msg => {
-            vueContext.commit("setPresenceIncrement");
+            vueContext.dispatch("handleNewMemberEntered", msg);
           }
         );
         this.state.channelInstances.mainParty.presence.subscribe(
           "leave",
           msg => {
-            vueContext.commit("setPresenceDecrement");
-            if (msg.data.isAdmin) {
-              vueContext.commit("setAdminLeaveStatus");
-            }
+            vueContext.dispatch("handleExistingMemberLeft", msg);
           }
         );
+      },
+      handleNewMemberEntered(vueContext, member) {
+        console.log("before adding", vueContext.state.onlineMembersArr);
+        vueContext.commit("setPresenceIncrement");
+        vueContext.commit("addToOnlineMembersArr", {
+          id: member.clientId,
+          username: member.data.username,
+          isAdmin: member.data.isAdmin
+        });
+        console.log("after adding", vueContext.state.onlineMembersArr);
+      },
+      handleExistingMemberLeft(vueContext, member) {
+        if (member.data.isAdmin) {
+          vueContext.commit("setAdminLeaveStatus");
+        } else {
+          console.log("before removing", vueContext.state.onlineMembersArr);
+          vueContext.commit("removeFromOnlineMembersArr", member.id);
+          console.log("after removing", vueContext.state.onlineMembersArr);
+          vueContext.commit("setPresenceDecrement");
+        }
       },
       enterClientInPresenceSet(vueContext) {
         console.log("entering");

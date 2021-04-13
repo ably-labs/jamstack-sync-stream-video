@@ -51,7 +51,7 @@ import VideoHeader from "../../components/Video/VideoHeader.vue";
 import VideoPlayer from "../../components/Video/VideoPlayer.vue";
 import CommentsList from "../../components/Comments/CommentsList.vue";
 
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 export default {
   data() {
     return {
@@ -93,6 +93,7 @@ export default {
       "disconnectAbly",
       "setChosenVideoDetails"
     ]),
+    ...mapMutations(["setWatchPartyRoomCode"]),
     joinRoom() {
       console.log("join clicked");
       this.isAdmin = false;
@@ -112,6 +113,9 @@ export default {
   created() {
     if (!this.getAdminStatus && !this.getSelectedVideoStatus) {
       this.showVideo = false;
+      this.setWatchPartyRoomCode(this.$route.params.roomCode);
+    } else if (!this.getAdminStatus) {
+      this.setWatchPartyRoomCode(this.$route.params.roomCode);
     } else if (this.getAdminStatus) {
       this.showVideo = true;
       this.getVideoChInstance.publish({ abc: "abc" });
