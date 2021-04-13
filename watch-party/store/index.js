@@ -10,17 +10,38 @@ const createStore = () => {
       watchPartyRoomCode: null,
       showShareableCodeStatus: false,
       channelNames: {
-        mainParty: "partych"
+        mainParty: "partych",
+        comments: "comments",
+        video: "video"
       },
       channelInstances: {
-        mainParty: null
+        mainParty: null,
+        comments: null,
+        video: null
       },
-      username: null
+      username: null,
+      isAdmin: false,
+      shareableLink: null,
+      presenceCount: 0,
+      didAdminChooseVideo: false,
+      chosenVideoRef: null,
+      didAdminLeave: false
     },
 
     getters: {
       showShareableCodeStatus: state => state.showShareableCodeStatus,
-      watchPartyRoomCode: state => state.watchPartyRoomCode
+      getWatchPartyRoomCode: state => state.watchPartyRoomCode,
+      getShareableLink: state => state.shareableLink,
+      getAdminStatus: state => state.isAdmin,
+      getPartyChInstance: state => state.channelInstances.mainParty,
+      getCommentsChInstance: state => state.channelInstances.comments,
+      getVideoChInstance: state => state.channelInstances.video,
+      getAblyConnectionStatus: state => state.isAblyConnected,
+      getPresenceCount: state => state.presenceCount,
+      getUsername: state => state.username,
+      getSelectedVideoStatus: state => state.didAdminChooseVideo,
+      getSelectedVideoRef: state => state.chosenVideoRef,
+      getAdminLeaveStatus: state => state.didAdminLeave
     },
 
     mutations: {
@@ -39,22 +60,39 @@ const createStore = () => {
       setUsername(state, username) {
         state.username = username;
       },
-      setAblyChannelInstances(state, mainParty) {
+      setAdminStatus(state, isAdmin) {
+        state.isAdmin = isAdmin;
+      },
+      setAblyChannelInstances(state, { mainParty, comments, video }) {
         state.channelInstances.mainParty = mainParty;
+        state.channelInstances.comments = comments;
+        state.channelInstances.video = video;
       },
       setShowCodeStatus(state, status) {
-        console.log("sldkfj" + status);
         state.showShareableCodeStatus = status;
+      },
+      setShareableLink(state, link) {
+        console.log(link);
+        state.shareableLink = link;
+      },
+      setPresenceIncrement(state) {
+        state.presenceCount++;
+      },
+      setPresenceDecrement(state) {
+        state.presenceCount--;
+      },
+      setAdminLeaveStatus(state) {
+        state.didAdminLeave = true;
       }
     },
 
     actions: {
-      instantiateAbly(vueContext, username) {
+      instantiateAbly(vueContext, { username, isAdmin }) {
         const ablyInstance = new Ably.Realtime({
           authUrl: "https://ably-auth.glitch.me/auth"
         });
         ablyInstance.connection.once("connected", () => {
-          console.log("Ably is connected successfully");
+          console.log("Ably is connected successfully", isAdmin, username);
           vueContext.commit("setAblyConnectionStatus", true);
           vueContext.commit("setAblyRealtimeInstance", ablyInstance);
           vueContext.commit(
@@ -62,7 +100,9 @@ const createStore = () => {
             this.state.ablyRealtimeInstance.auth.clientId
           );
           vueContext.commit("setUsername", username);
+          vueContext.commit("setAdminStatus", isAdmin);
           vueContext.dispatch("attachToChannels");
+          vueContext.dispatch("subscribeToPresence");
           vueContext.dispatch("enterClientInPresenceSet");
         });
       },
@@ -70,13 +110,46 @@ const createStore = () => {
         const mainParty = this.state.ablyRealtimeInstance.channels.get(
           this.state.channelNames.mainParty
         );
-        vueContext.commit("setAblyChannelInstances", mainParty);
+
+        const comments = this.state.ablyRealtimeInstance.channels.get(
+          this.state.channelNames.comments
+        );
+        const video = this.state.ablyRealtimeInstance.channels.get(
+          this.state.channelNames.video
+        );
+        vueContext.commit("setAblyChannelInstances", {
+          mainParty,
+          comments,
+          video
+        });
+      },
+      subscribeToPresence(vueContext) {
+        this.state.channelInstances.mainParty.presence.subscribe(
+          "enter",
+          msg => {
+            vueContext.commit("setPresenceIncrement");
+          }
+        );
+        this.state.channelInstances.mainParty.presence.subscribe(
+          "leave",
+          msg => {
+            vueContext.commit("setPresenceDecrement");
+            if (msg.data.isAdmin) {
+              vueContext.commit("setAdminLeaveStatus");
+            }
+          }
+        );
       },
       enterClientInPresenceSet(vueContext) {
+        console.log("entering");
         this.state.channelInstances.mainParty.presence.enter({
-          username: this.state.username
+          username: this.state.username,
+          isAdmin: this.state.isAdmin
         });
-        vueContext.dispatch("showShareableCode");
+        console.log(this.state.isAdmin);
+        if (this.state.isAdmin) {
+          vueContext.dispatch("showShareableCode");
+        }
       },
       showShareableCode(vueContext) {
         console.log("in store");
@@ -91,6 +164,9 @@ const createStore = () => {
       disconnectAbly(vueContext) {
         this.state.ablyRealtimeInstance.connection.close();
         vueContext.commit("setAblyConnectionStatus", true);
+      },
+      setChosenVideoDetails(vueContext) {
+        console.log("alkbj");
       }
     }
   });

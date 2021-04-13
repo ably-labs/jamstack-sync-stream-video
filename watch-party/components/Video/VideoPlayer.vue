@@ -1,7 +1,7 @@
 <template>
-  <section class="ml-6 w-11/12 container">
+  <section class="">
     <div
-      class="video-player-box  vjs-big-play-centered vjs-16-9"
+      class="video-player-box  vjs-big-play-centered vjs-16-9 border-2 border-black"
       :playsinline="playsinline"
       @play="onPlayerPlay($event)"
       @pause="onPlayerPause($event)"
@@ -20,13 +20,15 @@
 </template>
 
 <script>
+import { mapGetters, mapActions, mapMutations } from "vuex";
+
 export default {
   name: "VideoPlayer",
   data() {
     return {
       playsinline: true,
       playerOptions: {
-        //player configuration
+        //player configuration ml-6 w-11/12 container
         muted: false, //whether to mute
         language: "en",
         fluid: true,
@@ -38,7 +40,7 @@ export default {
           {
             type: "video/mp4",
             src:
-              "https://cdn.theguardian.tv/webM/2015/07/20/150716YesMen_synd_768k_vp8.webm"
+              "https://res.cloudinary.com/dlaq5yfxp/video/upload/v1618305819/150716YesMen_synd_768k_vp8_w0dpbg.webm"
           }
         ],
         poster:
@@ -49,14 +51,23 @@ export default {
   mounted() {
     console.log("this is current player instance object", this.myVideoPlayer);
   },
+  computed: {
+    ...mapGetters(["getAdminStatus", "getVideoChInstance"])
+  },
   methods: {
     // monitor playback
     onPlayerPlay(player) {
       // console.log('player play!', player)
+      if (this.getAdminStatus) {
+        this.publishToAll("play", player.currentTime());
+      }
     },
     // monitor pause
     onPlayerPause(player) {
       // console.log('player pause!', player)
+      if (this.getAdminStatus) {
+        this.publishToAll("pause", player.currentTime());
+      }
     },
     // monitor stop
     onPlayerEnded(player) {
@@ -79,7 +90,7 @@ export default {
       // console.log('player Timeupdate!', player.currentTime())
     },
     onPlayerCanplay(player) {
-      console.log("player Canplay!", player);
+      // console.log("player Canplay!", player);
     },
     onPlayerCanplaythrough(player) {
       // console.log('player Canplaythrough!', player)
@@ -91,6 +102,35 @@ export default {
     // The monitor player is ready
     playerReadied(player) {
       // console.log('example 01: the player is readied', player)
+    },
+    publishToAll(event, data) {
+      this.getVideoChInstance.publish(event, { currentTime: data }, msg => {
+        console.log("PUBLISH VIDEO CHA", msg);
+      });
+    },
+    handlePlayBroadcast(timestamp) {
+      //console.log(this.myVideoPlayer);
+      console.log("this is sit");
+      this.myVideoPlayer.play();
+      this.myVideoPlayer.currentTime(timestamp);
+    },
+    handlePauseBroadcast(timestamp) {
+      this.myVideoPlayer.pause();
+    }
+  },
+  created() {
+    if (!this.getAdminStatus) {
+      this.getVideoChInstance.subscribe(msg => {
+        console.log("got this");
+        switch (msg.name) {
+          case "play":
+            console.log(msg.data);
+            this.handlePlayBroadcast(msg.data.currentTime);
+            break;
+          case "pause":
+            this.handlePauseBroadcast();
+        }
+      });
     }
   }
 };

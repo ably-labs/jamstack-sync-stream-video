@@ -3,13 +3,18 @@
     <div class="w-9/12 text-2xl font-semibold ml-0 mt-auto mb-auto">
       LIVE WATCH PARTY WITH ABLY AND STRAPI
     </div>
-    <div class="m-auto w-3/12">56 people watching</div>
+    <div class="m-auto w-3/12">{{ getPresenceCount }} people watching</div>
   </div>
 </template>
 
 <script>
+import { mapGetters, mapActions, mapMutations } from "vuex";
+
 export default {
-  name: "VideoHeader"
+  name: "VideoHeader",
+  computed: {
+    ...mapGetters(["getPresenceCount"])
+  }
 };
 </script>
 

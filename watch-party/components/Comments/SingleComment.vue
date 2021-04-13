@@ -1,15 +1,16 @@
 <template>
   <div class="p-2 border-b-2 border-gray-300 w-full">
-    <div class="text-base">Hey this is a comment, wasssaaap??</div>
+    <div class="text-base">{{ message }}</div>
     <div class="flex justify-end text-xs text-gray-600">
-      at 12:89pm by Srushtika
+      at {{ timestamp }} by {{ username }}
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "SingleComment"
+  name: "SingleComment",
+  props: ["message", "timestamp", "username"]
 };
 </script>
 
