@@ -1,9 +1,7 @@
 <template>
-  <div class="p-2 border-b-2 border-gray-300 w-full">
+  <div class="single-comment-block">
     <div class="text-base">{{ message }}</div>
-    <div class="flex justify-end text-xs text-gray-600">
-      at {{ timestamp }} by {{ username }}
-    </div>
+    <div class="comment-subtext">at {{ timestamp }} by {{ username }}</div>
   </div>
 </template>
 
@@ -14,4 +12,12 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="postcss">
+.single-comment-block {
+  @apply p-2 border-b-2 border-gray-300 w-full;
+}
+
+.comment-subtext {
+  @apply flex justify-end text-xs text-gray-600;
+}
+</style>

@@ -1,16 +1,13 @@
 <template>
   <div class="m-5">
-    <div class="flex justify-end mt-2 mb-2">
-      <button
-        class="rounded bg-gray-800 p-2 text-white hover:bg-gray-900 w-64"
-        @click="copyBtnClicked()"
-      >
+    <div class="copy-code-section">
+      <button class="action-btn" @click="copyBtnClicked()">
         {{ btnText }}
         <font-awesome-icon :icon="['fas', 'copy']" />
       </button>
     </div>
-    <div class="grid grid-cols-3 gap-4 ">
-      <div v-for="index in 10" :key="index" class="text-left border-2 rounded">
+    <div class="video-gallery">
+      <div v-for="index in 10" :key="index" class="video-block">
         <img
           src="../assets/vid-thumbnail.png"
           alt="Video thumbnail"
@@ -28,11 +25,11 @@
             }
           }"
         >
-          <p class="text-base text-gray-800 m-3">
+          <p class="video-title">
             Apollo Command and Service Module Animation
           </p>
         </NuxtLink>
-        <p class="text-xs text-gray-600 m-3">
+        <p class="video-description">
           Animation of the Command and Service Module (CSM) of the Apollo space
           program, spinning against an animated background of the world.
         </p>
@@ -72,3 +69,33 @@ export default {
   }
 };
 </script>
+
+<style scoped lang="postcss">
+.action-btn {
+  @apply rounded bg-gray-800 p-2 text-white w-64;
+}
+
+.action-btn:hover {
+  @apply bg-gray-900;
+}
+
+.copy-code-section {
+  @apply flex justify-end mt-2 mb-2;
+}
+
+.video-gallery {
+  @apply grid grid-cols-3 gap-4;
+}
+
+.video-block {
+  @apply text-left border-2 rounded;
+}
+
+.video-title {
+  @apply text-base text-gray-800 m-3;
+}
+
+.video-description {
+  @apply text-xs text-gray-600 m-3;
+}
+</style>

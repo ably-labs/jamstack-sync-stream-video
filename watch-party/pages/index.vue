@@ -3,7 +3,7 @@
     <div class="block ">
       <input
         type="text"
-        class="rounded bg-gray-300 w-64 text-center"
+        class="username-input"
         placeholder="Enter your username"
         v-model="username"
         :disabled="isCreatingRoom"
@@ -12,7 +12,7 @@
     </div>
     <div class="block">
       <button
-        class="rounded bg-gray-800  p-2 m-auto text-white hover:bg-gray-900 w-64"
+        class="action-btn"
         :class="{ 'opacity-50': btnDisabled, 'opacity-100': !btnDisabled }"
         :disabled="btnDisabled"
         @click="shouldShowCode ? copyBtnClicked() : createRoom()"
@@ -96,7 +96,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="postcss">
 .container {
   margin: 0 auto;
   min-height: 100vh;
@@ -126,5 +126,17 @@ export default {
 
 .links {
   padding-top: 15px;
+}
+
+.username-input {
+  @apply rounded bg-gray-300 w-64 text-center;
+}
+
+.action-btn {
+  @apply rounded bg-gray-800 p-2 m-auto text-white w-64;
+}
+
+.action-btn:hover {
+  @apply bg-gray-900;
 }
 </style>

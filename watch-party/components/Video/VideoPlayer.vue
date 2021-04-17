@@ -1,7 +1,7 @@
 <template>
   <section class="">
     <div
-      class="video-player-box  vjs-big-play-centered vjs-16-9 border-2 border-black"
+      class="videojs-player video-player-box vjs-big-play-centered vjs-16-9"
       :playsinline="playsinline"
       @play="onPlayerPlay($event)"
       @pause="onPlayerPause($event)"
@@ -109,8 +109,6 @@ export default {
       });
     },
     handlePlayBroadcast(timestamp) {
-      //console.log(this.myVideoPlayer);
-      console.log("this is sit");
       this.myVideoPlayer.play();
       this.myVideoPlayer.currentTime(timestamp);
     },
@@ -121,7 +119,6 @@ export default {
   created() {
     if (!this.getAdminStatus) {
       this.getVideoChInstance.subscribe(msg => {
-        console.log("got this");
         switch (msg.name) {
           case "play":
             console.log(msg.data);
@@ -136,4 +133,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="postcss">
+.videojs-player {
+  @apply border-2 border-black;
+}
+</style>

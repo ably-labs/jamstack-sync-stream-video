@@ -1,9 +1,9 @@
 <template>
-  <div class="ml-6 text-gray-700 h-16 text-left flex justify-between w-full">
-    <div class="w-9/12 text-2xl font-semibold ml-0 mt-auto mb-auto">
+  <div class="video-header-section">
+    <div class="video-header-title">
       LIVE WATCH PARTY WITH ABLY AND STRAPI
     </div>
-    <div class="m-auto w-3/12">{{ getPresenceCount }} people watching</div>
+    <div class="presence-stats">{{ getPresenceCount }} people watching</div>
   </div>
 </template>
 
@@ -18,4 +18,16 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="postcss">
+.video-header-section {
+  @apply ml-6 text-gray-700 h-16 text-left flex justify-between w-full;
+}
+
+.video-header-title {
+  @apply w-9/12 text-2xl font-semibold ml-0 mt-auto mb-auto;
+}
+
+.presence-stats {
+  @apply m-auto w-3/12;
+}
+</style>
