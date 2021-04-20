@@ -1,14 +1,9 @@
 <template>
-  <div
-    class="pl-4 pt-6 pb-6 pr-6 ml-2 text-gray-700 text-left w-full min-h-screen"
-  >
-    <div class="w-9/12 text-2xl font-semibold">
+  <div class="comment-list-section">
+    <div class="comments-header">
       LIVE COMMENTS
     </div>
-    <div
-      class="mt-3 border border-gray-500 rounded rounded-b-none comments-box overflow-y-scroll"
-      ref="commentsBox"
-    >
+    <div class="comments" ref="commentsBox">
       <ul>
         <li v-for="comment in commentsArray" :key="comment.msgId">
           <SingleComment
@@ -19,23 +14,18 @@
         </li>
       </ul>
     </div>
-    <div
-      class="bottom-0 border-t-0 border border-gray-500 flex justify-start rounded rounded-t-none"
-    >
+    <div class="comment-input-section">
       <div class="p-2.5 w-10/12">
         <input
           type="text"
-          class="block w-full rounded bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0"
+          class="comment-input"
           placeholder="Enter a comment..."
           v-model="commentMsg"
           @keyup.enter="publishMessage()"
         />
       </div>
       <div class="">
-        <button
-          class="bg-gray-800 p-2 m-auto text-white hover:bg-gray-900"
-          @click="publishMessage()"
-        >
+        <button class="comment-send-btn" @click="publishMessage()">
           SEND
         </button>
       </div>
@@ -57,36 +47,21 @@ export default {
       commentMsg: "",
       commentsArray: [],
       messageTime12HrFormat: null,
-      messageTime24HrFormat: null,
-      channelsSubscribed: false
+      messageTime24HrFormat: null
     };
   },
   computed: {
-    ...mapGetters([
-      "getPartyChInstance",
-      "getCommentsChInstance",
-      "getUsername",
-      "getAblyConnectionStatus"
-    ])
+    ...mapGetters(["getCommentsChMessage"])
   },
   watch: {
-    getAblyConnectionStatus: function(newStatus, oldStatus) {
-      console.log("ok ready" + newStatus + oldStatus);
-      this.ablyConnectionStatus = newStatus;
-      if (newStatus && !this.channelsSubscribed) {
-        this.subscribeToChannels();
-      }
+    getCommentsChMessage: function(msg) {
+      this.handleNewComment(msg);
     }
   },
   methods: {
+    ...mapActions(["publishMyCommentToAbly"]),
     publishMessage() {
-      this.getCommentsChInstance.publish(
-        "comment",
-        { username: this.getUsername, content: this.commentMsg },
-        msg => {
-          console.log("Publish called with msg: " + msg);
-        }
-      );
+      this.publishMyCommentToAbly(this.commentMsg);
       this.commentMsg = "";
     },
     async handleNewComment(msg) {
@@ -112,28 +87,47 @@ export default {
       hours = hours % 12 || 12;
       this.messageTime12HrFormat = `${hours}:${minutes} ${ampm}`;
       return this.messageTime12HrFormat;
-    },
-    subscribeToChannels() {
-      this.getCommentsChInstance.subscribe(msg => {
-        this.handleNewComment(msg);
-      });
-      this.getPartyChInstance.subscribe(msg => {
-        console.log("party channel message", msg);
-      });
-      this.channelsSubscribed = true;
     }
   },
-  created() {
-    if (this.getAblyConnectionStatus) {
-      this.subscribeToChannels();
-    }
-  }
+  created() {}
 };
 </script>
 
-<style scoped>
+<style scoped lang="postcss">
 .comments-box {
   min-height: 80vh;
   max-height: 80vh;
+}
+
+.comment-list-section {
+  @apply pl-4 pt-6 pb-6 pr-6 ml-2 text-gray-700 text-left w-full min-h-screen;
+}
+
+.comments-header {
+  @apply w-9/12 text-2xl font-semibold;
+}
+
+.comments {
+  @apply mt-3 border border-gray-500 rounded rounded-b-none comments-box overflow-y-scroll;
+}
+
+.comment-input-section {
+  @apply bottom-0 border-t-0 border border-gray-500 flex justify-start rounded rounded-t-none;
+}
+
+.comment-input {
+  @apply block w-full rounded bg-gray-100 border-transparent;
+}
+
+.comment-input:focus {
+  @apply border-gray-500 bg-white;
+}
+
+.comment-send-btn {
+  @apply bg-gray-800 p-2 m-auto text-white;
+}
+
+.comment-send-btn:hover {
+  @apply bg-gray-900;
 }
 </style>
