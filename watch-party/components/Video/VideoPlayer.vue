@@ -21,7 +21,7 @@
 
 <script>
 import { mapGetters, mapActions, mapMutations } from "vuex";
-
+// todo add youtube support with https://github.com/videojs/videojs-youtube
 export default {
   name: "VideoPlayer",
   data() {
@@ -49,24 +49,46 @@ export default {
     };
   },
   mounted() {
-    console.log("this is current player instance object", this.myVideoPlayer);
+    this.setVideoPlayerInstance(this.myVideoPlayer);
   },
   computed: {
-    ...mapGetters(["getAdminStatus", "getVideoChInstance"])
+    ...mapGetters(["getIsAdminStatus", "getVideoChMessage"])
+  },
+  watch: {
+    getVideoChMessage: function(msg) {
+      console.log("NON ADMIN RECEIVED MESSAGE", msg.name);
+      switch (msg.name) {
+        case "play-event":
+          this.myVideoPlayer.play();
+          this.myVideoPlayer.currentTime(msg.data.currentTime);
+          break;
+        case "pause-event":
+          this.myVideoPlayer.pause();
+          break;
+      }
+    }
   },
   methods: {
+    ...mapActions(["publishCurrentVideoStatus"]),
+    ...mapMutations(["setVideoStatusUpdate", "setVideoPlayerInstance"]),
     // monitor playback
     onPlayerPlay(player) {
-      // console.log('player play!', player)
-      if (this.getAdminStatus) {
-        this.publishToAll("play", player.currentTime());
+      if (this.getIsAdminStatus) {
+        this.setVideoStatusUpdate({
+          isPlaying: true,
+          isPaused: false
+        });
+        this.publishCurrentVideoStatus("play-event");
       }
     },
     // monitor pause
     onPlayerPause(player) {
-      // console.log('player pause!', player)
-      if (this.getAdminStatus) {
-        this.publishToAll("pause", player.currentTime());
+      if (this.getIsAdminStatus) {
+        this.setVideoStatusUpdate({
+          isPlaying: false,
+          isPaused: true
+        });
+        this.publishCurrentVideoStatus("pause-event");
       }
     },
     // monitor stop
@@ -88,6 +110,9 @@ export default {
     // Monitor video playback duration update
     onPlayerTimeupdate(player) {
       // console.log('player Timeupdate!', player.currentTime())
+      this.setVideoStatusUpdate({
+        currentTime: player.currentTime()
+      });
     },
     onPlayerCanplay(player) {
       // console.log("player Canplay!", player);
@@ -102,34 +127,9 @@ export default {
     // The monitor player is ready
     playerReadied(player) {
       // console.log('example 01: the player is readied', player)
-    },
-    publishToAll(event, data) {
-      this.getVideoChInstance.publish(event, { currentTime: data }, msg => {
-        console.log("PUBLISH VIDEO CHA", msg);
-      });
-    },
-    handlePlayBroadcast(timestamp) {
-      this.myVideoPlayer.play();
-      this.myVideoPlayer.currentTime(timestamp);
-    },
-    handlePauseBroadcast(timestamp) {
-      this.myVideoPlayer.pause();
     }
   },
-  created() {
-    if (!this.getAdminStatus) {
-      this.getVideoChInstance.subscribe(msg => {
-        switch (msg.name) {
-          case "play":
-            console.log(msg.data);
-            this.handlePlayBroadcast(msg.data.currentTime);
-            break;
-          case "pause":
-            this.handlePauseBroadcast();
-        }
-      });
-    }
-  }
+  created() {}
 };
 </script>
 

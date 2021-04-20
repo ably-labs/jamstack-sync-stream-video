@@ -60,7 +60,6 @@ export default {
         this.copyClicked = false;
         this.btnText = "Copy shareable link";
       }, 2000);
-      console.log(this.getShareableLink);
       navigator.clipboard.writeText(this.getShareableLink);
     }
   },

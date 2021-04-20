@@ -2,7 +2,7 @@
   <div>
     <div
       class="username-section container"
-      v-if="!isUsernameEntered && !getAdminStatus"
+      v-if="!isUsernameEntered && !getIsAdminStatus"
     >
       <div class="block">
         <input
@@ -27,10 +27,15 @@
         </button>
       </div>
     </div>
-    <div class="video-section" v-if="isUsernameEntered || getAdminStatus">
+    <div class="video-section" v-if="isUsernameEntered || getIsAdminStatus">
       <div class="p-6 w-9/12 bg-gray-200 rounded">
         <VideoHeader />
         <VideoPlayer v-if="showVideo"></VideoPlayer>
+        <div class="block" v-if="!getIsAdminStatus">
+          <button class="action-btn" @click="forceSyncWithAdmin()">
+            Force sync with admin
+          </button>
+        </div>
         <div v-if="!showVideo" class="waiting-msg">
           Waiting for the admin to choose a video to watch together...Feel free
           to suggest something in the comments section
@@ -55,66 +60,59 @@ export default {
       username: null,
       isUsernameEntered: false,
       isAdmin: null,
-      showVideo: null,
-      channelsSubscribed: false
+      showVideo: false
     };
   },
   computed: {
     ...mapGetters([
-      "getAdminStatus",
-      "getPartyChInstance",
-      "getAblyConnectionStatus",
-      "getVideoChInstance",
-      "getAdminLeaveStatus"
+      "getIsAdminStatus",
+      "getDidAdminLeaveStatus",
+      "getVideoChMessage"
     ]),
     isUsernameAdded() {
       return this.username != null;
     }
   },
   watch: {
-    getAblyConnectionStatus: function(newStatus, oldStatus) {
-      console.log("ok ready" + newStatus + oldStatus);
-      this.ablyConnectionStatus = newStatus;
-      if (newStatus && !this.channelsSubscribed) {
-        this.subscribeToChannels();
-      }
-    },
-    getAdminLeaveStatus: function(newStatus, oldStatus) {
+    getDidAdminLeaveStatus: function(newStatus, oldStatus) {
       console.log("ADMIN HAS LEFT");
+    },
+    getVideoChMessage: function(msg) {
+      console.log("NON ADMIN RECEIVED MESSAGE", msg.name);
+      if (!this.showVideo) {
+        this.handleVideoPlayerUpdate(msg);
+      }
     }
   },
   methods: {
     ...mapActions([
       "instantiateAbly",
-      "disconnectAbly",
-      "setChosenVideoDetails"
+      "setChosenVideoDetails",
+      "publishCurrentVideoStatus"
     ]),
-    ...mapMutations(["setWatchPartyRoomCode"]),
+    ...mapMutations(["setWatchPartyRoomCode", "setVideoStatusUpdate"]),
     joinRoom() {
-      console.log("join clicked");
       this.isAdmin = false;
       this.instantiateAbly({ username: this.username, isAdmin: this.isAdmin });
       this.isUsernameEntered = true;
     },
-    subscribeToChannels() {
-      this.getVideoChInstance.subscribe(msg => {
-        this.handleVideoPlayerUpdate(msg);
-      });
-      this.channelsSubscribed = true;
-    },
-    handleVideoPlayerUpdate() {
-      this.showVideo = true;
+    handleVideoPlayerUpdate(msg) {
+      msg.data.isVideoChosen === true
+        ? (this.showVideo = true)
+        : (this.showVideo = false);
+      this.setVideoStatusUpdate(msg.data);
     }
   },
   created() {
-    if (!this.getAdminStatus && !this.getSelectedVideoStatus) {
-      this.showVideo = false;
-      this.setWatchPartyRoomCode(this.$route.params.roomCode);
-    } else if (!this.getAdminStatus) {
-      this.setWatchPartyRoomCode(this.$route.params.roomCode);
-    } else if (this.getAdminStatus) {
+    if (this.getIsAdminStatus) {
       this.showVideo = true;
-      this.getVideoChInstance.publish({ abc: "abc" });
+      this.setVideoStatusUpdate({
+        isVideoChosen: true,
+        chosenVideoRef: this.$route.params.chosenVideoRef
+      });
+      this.publishCurrentVideoStatus("video-chosen");
+    } else {
+      this.setWatchPartyRoomCode(this.$route.params.roomCode);
     }
   },
   destroyed() {}

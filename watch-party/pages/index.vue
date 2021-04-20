@@ -53,7 +53,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["showShareableCodeStatus", "getWatchPartyRoomCode"]),
+    ...mapGetters([
+      "getShouldShowShareableCodeStatus",
+      "getWatchPartyRoomCode"
+    ]),
     btnDisabled() {
       return (
         (this.username == null || this.isCreatingRoom) && !this.shouldShowCode
@@ -61,8 +64,7 @@ export default {
     }
   },
   watch: {
-    showShareableCodeStatus: function(newStatus, oldStatus) {
-      console.log("ok ready" + newStatus + oldStatus);
+    getShouldShowShareableCodeStatus: function(newStatus) {
       this.shouldShowCode = newStatus;
       if (newStatus) {
         this.btnText = "Copy shareable link";
@@ -71,9 +73,8 @@ export default {
   },
   methods: {
     ...mapMutations(["setShareableLink"]),
-    ...mapActions(["instantiateAbly", "disconnectAbly"]),
+    ...mapActions(["instantiateAbly"]),
     createRoom() {
-      console.log("creating..");
       this.btnText = "Creating your watch party...";
       this.isCreatingRoom = true;
       this.isAdmin = true;

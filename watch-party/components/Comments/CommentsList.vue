@@ -47,36 +47,21 @@ export default {
       commentMsg: "",
       commentsArray: [],
       messageTime12HrFormat: null,
-      messageTime24HrFormat: null,
-      channelsSubscribed: false
+      messageTime24HrFormat: null
     };
   },
   computed: {
-    ...mapGetters([
-      "getPartyChInstance",
-      "getCommentsChInstance",
-      "getUsername",
-      "getAblyConnectionStatus"
-    ])
+    ...mapGetters(["getCommentsChMessage"])
   },
   watch: {
-    getAblyConnectionStatus: function(newStatus, oldStatus) {
-      console.log("ok ready" + newStatus + oldStatus);
-      this.ablyConnectionStatus = newStatus;
-      if (newStatus && !this.channelsSubscribed) {
-        this.subscribeToChannels();
-      }
+    getCommentsChMessage: function(msg) {
+      this.handleNewComment(msg);
     }
   },
   methods: {
+    ...mapActions(["publishMyCommentToAbly"]),
     publishMessage() {
-      this.getCommentsChInstance.publish(
-        "comment",
-        { username: this.getUsername, content: this.commentMsg },
-        msg => {
-          console.log("Publish called with msg: " + msg);
-        }
-      );
+      this.publishMyCommentToAbly(this.commentMsg);
       this.commentMsg = "";
     },
     async handleNewComment(msg) {
@@ -102,22 +87,9 @@ export default {
       hours = hours % 12 || 12;
       this.messageTime12HrFormat = `${hours}:${minutes} ${ampm}`;
       return this.messageTime12HrFormat;
-    },
-    subscribeToChannels() {
-      this.getCommentsChInstance.subscribe(msg => {
-        this.handleNewComment(msg);
-      });
-      this.getPartyChInstance.subscribe(msg => {
-        console.log("party channel message", msg);
-      });
-      this.channelsSubscribed = true;
     }
   },
-  created() {
-    if (this.getAblyConnectionStatus) {
-      this.subscribeToChannels();
-    }
-  }
+  created() {}
 };
 </script>
 
