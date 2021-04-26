@@ -28,12 +28,23 @@
       </div>
     </div>
     <div class="video-section" v-if="isUsernameEntered || getIsAdminStatus">
-      <div class="p-6 w-9/12 bg-gray-200 rounded">
+      <div class="video-section-column">
         <VideoHeader />
         <VideoPlayer v-if="showVideo"></VideoPlayer>
-        <div class="block" v-if="!getIsAdminStatus">
-          <button class="action-btn" @click="forceSyncWithAdmin()">
+        <div class="force-sync-section" v-if="showVideo && !getIsAdminStatus">
+          <button class="sync-btn" @click="forceSyncWithAdmin()">
             Force sync with admin
+            <font-awesome-icon class="avatar " :icon="['fas', 'sync-alt']" />
+          </button>
+        </div>
+        <div class="force-sync-section" v-if="getIsAdminStatus">
+          <button
+            v-if="getIsAdminStatus"
+            class="sync-btn"
+            @click="copyBtnClicked()"
+          >
+            {{ btnText }}
+            <font-awesome-icon :icon="['fas', 'copy']" />
           </button>
         </div>
         <div v-if="!showVideo" class="waiting-msg">
@@ -60,14 +71,18 @@ export default {
       username: null,
       isUsernameEntered: false,
       isAdmin: null,
-      showVideo: false
+      showVideo: false,
+      copyClicked: null,
+      btnText: "Copy shareable link"
     };
   },
   computed: {
     ...mapGetters([
       "getIsAdminStatus",
       "getDidAdminLeaveStatus",
-      "getVideoChMessage"
+      "getVideoChMessage",
+      "getCurrentVideoStatus",
+      "getShareableLink"
     ]),
     isUsernameAdded() {
       return this.username != null;
@@ -88,7 +103,8 @@ export default {
     ...mapActions([
       "instantiateAbly",
       "setChosenVideoDetails",
-      "publishCurrentVideoStatus"
+      "publishCurrentVideoStatus",
+      "requestInitialVideoStatus"
     ]),
     ...mapMutations(["setWatchPartyRoomCode", "setVideoStatusUpdate"]),
     joinRoom() {
@@ -101,6 +117,20 @@ export default {
         ? (this.showVideo = true)
         : (this.showVideo = false);
       this.setVideoStatusUpdate(msg.data);
+      console.log("came here first in room code");
+      console.log(this.getCurrentVideoStatus);
+    },
+    forceSyncWithAdmin() {
+      this.requestInitialVideoStatus();
+    },
+    copyBtnClicked() {
+      this.copyClicked = true;
+      this.btnText = "Copied !";
+      setTimeout(() => {
+        this.copyClicked = false;
+        this.btnText = "Copy shareable link";
+      }, 2000);
+      navigator.clipboard.writeText(this.getShareableLink);
     }
   },
   created() {
@@ -138,22 +168,62 @@ export default {
 }
 
 .action-btn {
-  @apply rounded bg-gray-800  p-2 m-auto text-white w-64;
+  @apply rounded bg-gray-800 p-2 m-auto text-white w-64;
 }
 
 .action-btn:hover {
   @apply bg-gray-900;
 }
 
-.video-section {
-  @apply flex h-screen max-w-full;
+.force-sync-section {
+  @apply text-center;
+}
+
+.sync-btn {
+  @apply rounded bg-gray-800 p-2 m-auto text-white w-3/4 my-2 text-xs;
+}
+
+.sync-btn:hover {
+  @apply bg-gray-900;
 }
 
 .waiting-msg {
   @apply ml-6 mt-56 mb-56 border border-current;
 }
-
+.video-section-column {
+  @apply w-full pt-3 px-3 pb-1;
+}
 .comments-section {
-  @apply w-1/4 overflow-hidden rounded;
+  @apply w-full overflow-hidden rounded;
+}
+
+@screen md {
+  .comments-section {
+    @apply w-1/3;
+  }
+
+  .video-section {
+    @apply flex;
+  }
+  .video-section-column {
+    @apply w-2/3 p-6 bg-gray-200 rounded;
+  }
+
+  .sync-btn {
+    @apply w-1/2 text-sm;
+  }
+}
+
+@screen xl {
+  .comments-section {
+    @apply w-1/4;
+  }
+
+  .video-section {
+    @apply flex;
+  }
+  .video-section-column {
+    @apply w-9/12;
+  }
 }
 </style>
