@@ -42,7 +42,6 @@ const createStore = () => {
       },
       videoPlayerInstance: null
     },
-
     getters: {
       getShouldShowShareableCodeStatus: state =>
         state.shouldShowShareableCodeStatus,
@@ -59,9 +58,10 @@ const createStore = () => {
       getPresenceCount: state => state.presenceCount,
       getUsername: state => state.username,
       getDidAdminChooseVideoStatus: state => state.didAdminChooseVideo,
-      getChosenVideoRef: state => state.chosenVideoRef,
+      getChosenVideoRef: state => state.currentVideoStatus.chosenVideoRef,
       getDidAdminLeaveStatus: state => state.didAdminLeave,
-      getCurrentVideoStatus: state => state.currentVideoStatus
+      getCurrentVideoStatus: state => state.currentVideoStatus,
+      getOnlineMembersArr: state => state.onlineMembersArr
     },
 
     mutations: {

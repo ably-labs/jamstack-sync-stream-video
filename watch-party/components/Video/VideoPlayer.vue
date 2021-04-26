@@ -52,7 +52,11 @@ export default {
     this.setVideoPlayerInstance(this.myVideoPlayer);
   },
   computed: {
-    ...mapGetters(["getIsAdminStatus", "getVideoChMessage"])
+    ...mapGetters([
+      "getIsAdminStatus",
+      "getVideoChMessage",
+      "getCurrentVideoStatus"
+    ])
   },
   watch: {
     getVideoChMessage: function(msg) {
@@ -75,6 +79,7 @@ export default {
     onPlayerPlay(player) {
       if (this.getIsAdminStatus) {
         this.setVideoStatusUpdate({
+          didStartPlayingVideo: true,
           isPlaying: true,
           isPaused: false
         });
@@ -97,7 +102,15 @@ export default {
     },
     // monitor loading is complete
     onPlayerLoadeddata(player) {
-      // console.log('player Loadeddata!', player)
+      if (this.getCurrentVideoStatus.didStartPlayingVideo) {
+        this.myVideoPlayer.currentTime(this.getCurrentVideoStatus.currentTime);
+        if (this.getCurrentVideoStatus.isPlaying) {
+          this.myVideoPlayer.play();
+        } else if (this.getCurrentVideoStatus.isPaused) {
+          this.myVideoPlayer.play();
+          this.myVideoPlayer.pause();
+        }
+      }
     },
     // monitor video buffer waiting
     onPlayerWaiting(player) {

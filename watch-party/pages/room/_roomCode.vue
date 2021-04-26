@@ -28,11 +28,11 @@
       </div>
     </div>
     <div class="video-section" v-if="isUsernameEntered || getIsAdminStatus">
-      <div class="p-6 w-9/12 bg-gray-200 rounded">
+      <div class="video-section-column">
         <VideoHeader />
         <VideoPlayer v-if="showVideo"></VideoPlayer>
-        <div class="block" v-if="!getIsAdminStatus">
-          <button class="action-btn" @click="forceSyncWithAdmin()">
+        <div class="block" v-if="showVideo && !getIsAdminStatus">
+          <button class="action-btn sync-btn" @click="forceSyncWithAdmin()">
             Force sync with admin
           </button>
         </div>
@@ -67,7 +67,8 @@ export default {
     ...mapGetters([
       "getIsAdminStatus",
       "getDidAdminLeaveStatus",
-      "getVideoChMessage"
+      "getVideoChMessage",
+      "getCurrentVideoStatus"
     ]),
     isUsernameAdded() {
       return this.username != null;
@@ -101,6 +102,8 @@ export default {
         ? (this.showVideo = true)
         : (this.showVideo = false);
       this.setVideoStatusUpdate(msg.data);
+      console.log("came here first in room code");
+      console.log(this.getCurrentVideoStatus);
     }
   },
   created() {
@@ -145,15 +148,43 @@ export default {
   @apply bg-gray-900;
 }
 
-.video-section {
-  @apply flex h-screen max-w-full;
-}
-
 .waiting-msg {
   @apply ml-6 mt-56 mb-56 border border-current;
 }
-
+.video-section-column {
+  @apply w-full p-3;
+}
 .comments-section {
-  @apply w-1/4 overflow-hidden rounded;
+  @apply w-full overflow-hidden rounded;
+}
+
+@screen md {
+  .comments-section {
+    @apply w-1/3;
+  }
+
+  .video-section {
+    @apply flex;
+  }
+  .video-section-column {
+    @apply w-2/3 p-6 bg-gray-200 rounded;
+  }
+}
+
+@screen xl {
+  .comments-section {
+    @apply w-1/4;
+  }
+
+  .video-section {
+    @apply flex;
+  }
+  .video-section-column {
+    @apply w-9/12;
+  }
+}
+
+.sync-btn {
+  @apply my-2;
 }
 </style>
