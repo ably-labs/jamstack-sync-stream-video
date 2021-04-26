@@ -154,7 +154,9 @@ export default {
 }
 
 .comments {
-  @apply border border-gray-500 border-t-0 comments-box overflow-y-scroll;
+  @apply border border-gray-500 border-t-0 overflow-y-scroll;
+  min-height: 40vh;
+  max-height: 40vh;
 }
 
 .comment-input-section {
@@ -208,6 +210,10 @@ export default {
 
   .comment-list-section {
     @apply pl-4 pt-6 pb-6 pr-6 ml-2 min-h-screen;
+  }
+
+  .comments {
+    @apply border border-gray-500 border-t-0 comments-box overflow-y-scroll;
   }
 }
 </style>

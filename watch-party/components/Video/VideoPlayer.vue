@@ -69,6 +69,19 @@ export default {
         case "pause-event":
           this.myVideoPlayer.pause();
           break;
+        case "general-status":
+          this.setVideoStatusUpdate(msg.data);
+          if (!msg.data.didStartPlayingVideo) {
+            this.myVideoPlayer.pause();
+            this.myVideoPlayer.currentTime(0);
+          } else if (msg.data.isPlaying) {
+            this.myVideoPlayer.play();
+            this.myVideoPlayer.currentTime(msg.data.currentTime);
+          } else if (msg.data.isPaused) {
+            this.myVideoPlayer.currentTime(msg.data.currentTime);
+            this.myVideoPlayer.play();
+            this.myVideoPlayer.pause();
+          }
       }
     }
   },
