@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions, mapMutations } from "vuex";
+import { mapGetters, mapActions, mapMutations, mapState } from "vuex";
 // todo add youtube support with https://github.com/videojs/videojs-youtube
 export default {
   name: "VideoPlayer",
@@ -37,27 +37,38 @@ export default {
         liveui: true,
         playbackRates: [0.7, 1.0, 1.5, 2.0], //Playback speed
         sources: [
-          {
-            type: "video/mp4",
-            src:
-              "https://res.cloudinary.com/dlaq5yfxp/video/upload/v1618305819/150716YesMen_synd_768k_vp8_w0dpbg.webm"
-          }
+          
         ],
-        poster:
-          "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg" //Cover image
+        poster: ""
       }
     };
-  },
-  mounted() {
-    this.setVideoPlayerInstance(this.myVideoPlayer);
   },
   computed: {
     ...mapGetters([
       "getIsAdminStatus",
       "getVideoChMessage",
-      "getCurrentVideoStatus"
+      "getCurrentVideoStatus",
+      "getChosenVideoThumb",
+      "getChosenVideoUrl"
     ])
   },
+  mounted() {
+    console.log(this.getCurrentVideoStatus)
+    this.poster = this.getCurrentVideoStatus.chosenVideoThumb;
+    console.log(this.getCurrentVideoStatus.chosenVideoThumb)
+    console.log(this.getCurrentVideoStatus.chosenVideoUrl)
+
+    var sourcesY = {}
+    sourcesY['type'] = "video/mp4";
+    sourcesY['src'] = "http://localhost:1337" + this.getCurrentVideoStatus.chosenVideoUrl;
+    
+    this.playerOptions.sources.push(sourcesY)
+    this.playerOptions.poster = "http://localhost:1337" + this.getCurrentVideoStatus.chosenVideoThumb
+
+    this.setVideoPlayerInstance(this.myVideoPlayer);
+
+  },
+  
   watch: {
     getVideoChMessage: function(msg) {
       console.log("NON ADMIN RECEIVED MESSAGE", msg.name);

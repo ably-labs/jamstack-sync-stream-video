@@ -21,8 +21,10 @@
             path: pathToWatchParty,
             query: {
               chosenVidType: 'db',
+              chosenVidRef: video.id,
               chosenVidCode: '1234',
-              chosenVideoLink: 'someLinktodo',
+              chosenVidUrl: video.video.url,
+              chosenVidThumb: video.thumbnail.url,
             },
           }"
         >
@@ -50,7 +52,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getShareableLink", "getWatchPartyRoomCode"])
+    ...mapGetters(["getShareableLink", "getWatchPartyRoomCode"]),
   },
   methods: {
     copyBtnClicked() {

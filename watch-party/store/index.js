@@ -35,7 +35,9 @@ const createStore = () => {
       currentVideoStatus: {
         isVideoChosen: false,
         didStartPlayingVideo: false,
+        chosenVideoUrl: null,
         chosenVideoRef: null,
+        chosenVideoThumb: null,
         currentTime: null,
         isPlaying: false,
         isPaused: false
@@ -59,6 +61,8 @@ const createStore = () => {
       getUsername: state => state.username,
       getDidAdminChooseVideoStatus: state => state.didAdminChooseVideo,
       getChosenVideoRef: state => state.currentVideoStatus.chosenVideoRef,
+      getChosenVideoUrl: state => state.currentVideoStatus.chosenVideoUrl,
+      getChosenVideoThumb: state => state.currentVideoStatus.chosenVideoThumb,
       getDidAdminLeaveStatus: state => state.didAdminLeave,
       getCurrentVideoStatus: state => state.currentVideoStatus,
       getOnlineMembersArr: state => state.onlineMembersArr
