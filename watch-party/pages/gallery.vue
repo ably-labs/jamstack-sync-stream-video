@@ -13,6 +13,7 @@
           alt="Video thumbnail"
           width="500"
           height="600"
+          class="thumbnail-img"
         />
 
         <NuxtLink
@@ -101,7 +102,7 @@ export default {
 }
 
 .video-gallery {
-  @apply grid grid-cols-3 gap-4;
+  @apply grid grid-cols-1 gap-4;
 }
 
 .video-block {
@@ -114,5 +115,19 @@ export default {
 
 .video-description {
   @apply text-xs text-gray-600 m-3;
+}
+.thumbnail-img {
+  width: 100%;
+}
+@screen sm {
+  .video-gallery {
+    @apply grid-cols-2;
+  }
+}
+
+@screen md {
+  .video-gallery {
+    @apply grid-cols-3;
+  }
 }
 </style>
