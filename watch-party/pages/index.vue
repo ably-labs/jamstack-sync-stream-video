@@ -27,10 +27,12 @@
     <NuxtLink v-if="showBrowseLink" to="/gallery"
       >Pick a video to watch <font-awesome-icon :icon="['fas', 'video']"
     /></NuxtLink>
+    <ProjectReferences></ProjectReferences>
   </div>
 </template>
 
 <script>
+import ProjectReferences from "../components/ProjectReferences.vue";
 import { mapGetters, mapActions, mapMutations } from "vuex";
 
 export default {

@@ -26,6 +26,7 @@
           Join the watch party
         </button>
       </div>
+      <ProjectReferences></ProjectReferences>
     </div>
     <div class="video-section" v-if="isUsernameEntered || getIsAdminStatus">
       <div class="video-section-column">
@@ -60,6 +61,7 @@
 </template>
 
 <script>
+import ProjectReferences from "../../components/ProjectReferences.vue";
 import VideoHeader from "../../components/Video/VideoHeader.vue";
 import VideoPlayer from "../../components/Video/VideoPlayer.vue";
 import CommentsList from "../../components/Comments/CommentsList.vue";
