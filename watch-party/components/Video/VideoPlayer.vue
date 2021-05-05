@@ -14,7 +14,7 @@
       @canplaythrough="onPlayerCanplaythrough($event)"
       @ready="playerReadied"
       @statechanged="playerStateChanged($event)"
-      v-video-player:myVideoPlayer="playerOptions"
+      v-video-player:myVideoPlayer="getLatestVideoPlayerOptions"
     ></div>
   </section>
 </template>
@@ -26,21 +26,7 @@ export default {
   name: "VideoPlayer",
   data() {
     return {
-      playsinline: true,
-      playerOptions: {
-        //player configuration ml-6 w-11/12 container
-        muted: false, //whether to mute
-        language: "en",
-        fluid: true,
-        // width: "550px",
-        // height: "300px",
-        liveui: true,
-        playbackRates: [0.7, 1.0, 1.5, 2.0], //Playback speed
-        sources: [
-          
-        ],
-        poster: ""
-      }
+      playsinline: true
     };
   },
   computed: {
@@ -48,27 +34,12 @@ export default {
       "getIsAdminStatus",
       "getVideoChMessage",
       "getCurrentVideoStatus",
-      "getChosenVideoThumb",
-      "getChosenVideoUrl"
+      "getLatestVideoPlayerOptions"
     ])
   },
   mounted() {
-    console.log(this.getCurrentVideoStatus)
-    this.poster = this.getCurrentVideoStatus.chosenVideoThumb;
-    console.log(this.getCurrentVideoStatus.chosenVideoThumb)
-    console.log(this.getCurrentVideoStatus.chosenVideoUrl)
-
-    var sourcesY = {}
-    sourcesY['type'] = "video/mp4";
-    sourcesY['src'] = "http://localhost:1337" + this.getCurrentVideoStatus.chosenVideoUrl;
-    
-    this.playerOptions.sources.push(sourcesY)
-    this.playerOptions.poster = "http://localhost:1337" + this.getCurrentVideoStatus.chosenVideoThumb
-
     this.setVideoPlayerInstance(this.myVideoPlayer);
-
   },
-  
   watch: {
     getVideoChMessage: function(msg) {
       console.log("NON ADMIN RECEIVED MESSAGE", msg.name);
