@@ -87,7 +87,7 @@ const createStore = () => {
       getOnlineMembersArr: state => state.onlineMembersArr,
       getLatestVideoPlayerOptions: state => {
         let latestVideoPlayerOptions = state.defaultVideoPlayerOptions;
-        latestVideoPlayerOptions.sources.src =
+        latestVideoPlayerOptions.sources[0].src =
           "http://localhost:1337" + state.currentVideoStatus.chosenVideoUrl;
         latestVideoPlayerOptions.poster =
           "http://localhost:1337" + state.currentVideoStatus.chosenVideoThumb;
