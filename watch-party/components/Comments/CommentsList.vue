@@ -154,7 +154,7 @@ export default {
 }
 
 .comments {
-  @apply border border-gray-500 border-t-0 overflow-y-scroll;
+  @apply border border-gray-500 border-t-0 overflow-y-scroll bg-gray-100;
   min-height: 40vh;
   max-height: 40vh;
 }
@@ -200,7 +200,7 @@ export default {
 }
 
 .inactive-tab-btn:hover {
-  @apply bg-gray-400;
+  @apply bg-gray-700 text-gray-100;
 }
 
 @screen md {
@@ -209,7 +209,7 @@ export default {
   }
 
   .comment-list-section {
-    @apply pl-4 pt-6 pb-6 pr-6 ml-2 min-h-screen;
+    @apply pl-4 pt-6 pb-6 pr-6 ml-2 min-h-screen bg-gray-200;
   }
 
   .comments {

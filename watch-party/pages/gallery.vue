@@ -1,10 +1,15 @@
 <template>
   <div class="m-5">
-    <div class="copy-code-section">
-      <button class="action-btn" @click="copyBtnClicked()">
-        {{ btnText }}
-        <font-awesome-icon :icon="['fas', 'copy']" />
-      </button>
+    <div class="gallery-header">
+      <p class="gallery-msg">
+        Choose a video you'd like to stream with friends
+      </p>
+      <div class="copy-code-section">
+        <button class="action-btn" @click="copyBtnClicked()">
+          {{ btnText }}
+          <font-awesome-icon :icon="['fas', 'copy']" />
+        </button>
+      </div>
     </div>
     <div class="video-gallery">
       <div v-for="index in 10" :key="index" class="video-block">
@@ -71,8 +76,15 @@ export default {
 </script>
 
 <style scoped lang="postcss">
+.gallery-header {
+  @apply flex text-left justify-between;
+}
+
+.gallery-msg {
+  @apply my-2 text-xs w-40;
+}
 .action-btn {
-  @apply rounded bg-gray-800 p-2 text-white w-64;
+  @apply rounded bg-gray-800 p-1 text-white w-40 text-xs;
 }
 
 .action-btn:hover {
@@ -88,28 +100,46 @@ export default {
 }
 
 .video-block {
-  @apply text-left border-2 rounded;
+  @apply text-left border-2 border-gray-600 rounded;
 }
 
 .video-title {
-  @apply text-base text-gray-800 m-3;
+  @apply text-base font-medium text-black m-3;
 }
 
 .video-description {
-  @apply text-xs text-gray-600 m-3;
+  @apply text-xs text-gray-800 font-medium m-3;
 }
 .thumbnail-img {
   width: 100%;
 }
 @screen sm {
+  .gallery-msg {
+    @apply w-1/2 text-sm;
+  }
   .video-gallery {
     @apply grid-cols-2;
+  }
+  .action-btn {
+    @apply w-64;
   }
 }
 
 @screen md {
   .video-gallery {
     @apply grid-cols-3;
+  }
+
+  .action-btn {
+    @apply rounded bg-gray-800 p-2 text-white w-64 text-base;
+  }
+
+  .gallery-header {
+    @apply flex text-center justify-between;
+  }
+
+  .gallery-msg {
+    @apply p-2 my-auto text-base text-left;
   }
 }
 </style>
