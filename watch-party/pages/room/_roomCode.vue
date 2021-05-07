@@ -32,14 +32,20 @@
     <div class="video-section" v-if="isUsernameEntered || getIsAdminStatus">
       <div class="video-section-column">
         <VideoHeader />
-        <VideoPlayer v-if="showVideo"></VideoPlayer>
-        <div class="force-sync-section" v-if="showVideo && !getIsAdminStatus">
+        <VideoPlayer v-if="showVideo && !getDidAdminLeaveStatus"></VideoPlayer>
+        <div
+          class="force-sync-section"
+          v-if="showVideo && !getIsAdminStatus && !getDidAdminLeaveStatus"
+        >
           <button class="sync-btn" @click="forceSyncWithAdmin()">
             Force sync with admin
             <font-awesome-icon class="avatar " :icon="['fas', 'sync-alt']" />
           </button>
         </div>
-        <div class="force-sync-section" v-if="getIsAdminStatus">
+        <div
+          class="force-sync-section"
+          v-if="getIsAdminStatus && !getDidAdminLeaveStatus"
+        >
           <button
             v-if="getIsAdminStatus"
             class="sync-btn"
@@ -49,10 +55,21 @@
             <font-awesome-icon :icon="['fas', 'copy']" />
           </button>
         </div>
-        <div v-if="!showVideo" class="waiting-msg">
-          Waiting for the admin to choose a video to watch together.
-          <br /><br />Until then, you can start adding live comments, or check
-          out this project on GitHub:
+        <div v-if="!showVideo || getDidAdminLeaveStatus" class="waiting-msg">
+          <p v-if="!getDidAdminLeaveStatus">
+            Waiting for the admin to choose a video to watch together.
+            <br /><br />Until then, you can start adding live comments, or check
+            out this project on GitHub:
+          </p>
+          <p v-if="getDidAdminLeaveStatus">
+            Unfortunately, the host of this watch party has left. Show's over!
+            <br /><br />Check out this project on GitHub or
+            <!--todo update url-->
+            <a href="http://localhost:3000/" class="home-link"
+              >go to the main page</a
+            >
+            to host your own watch party
+          </p>
           <div class="my-5 ml-0">
             <gh-btns-star
               slug="ably-labs/jamstack-sync-stream-video"
@@ -223,6 +240,10 @@ export default {
 .gh-btn {
   float: none;
   @apply ml-0;
+}
+
+.home-link {
+  @apply text-blue-600;
 }
 
 @screen md {
