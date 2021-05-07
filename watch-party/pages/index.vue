@@ -1,6 +1,7 @@
 <template>
   <div class="container flex-col">
-    <div class="block ">
+    <ProjectTitle></ProjectTitle>
+    <div class="block">
       <input
         type="text"
         class="username-input"
@@ -33,6 +34,7 @@
 
 <script>
 import ProjectReferences from "../components/ProjectReferences.vue";
+import ProjectTitle from "../components/ProjectTitle.vue";
 import { mapGetters, mapActions, mapMutations } from "vuex";
 
 export default {
@@ -99,7 +101,7 @@ export default {
 };
 </script>
 
-<style lang="postcss">
+<style lang="postcss" scoped>
 .container {
   margin: 0 auto;
   min-height: 100vh;
@@ -132,14 +134,14 @@ export default {
 }
 
 .username-input {
-  @apply rounded bg-gray-300 w-64 text-center;
+  @apply rounded rounded-b-none bg-white w-64 text-center border border-gray-900;
 }
 
 .action-btn {
-  @apply rounded bg-gray-800 p-2 m-auto text-white w-64;
+  @apply rounded rounded-t-none bg-gray-900 p-2 m-auto text-white w-64;
 }
 
 .action-btn:hover {
-  @apply bg-gray-900;
+  @apply bg-black;
 }
 </style>
