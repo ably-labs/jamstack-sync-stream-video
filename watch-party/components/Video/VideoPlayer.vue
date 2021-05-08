@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import videojs from "videojs-youtube";
 import { mapGetters, mapActions, mapMutations } from "vuex";
 // todo add youtube support with https://github.com/videojs/videojs-youtube
 export default {
@@ -38,11 +39,11 @@ export default {
         playbackRates: [0.7, 1.0, 1.5, 2.0], //Playback speed
         sources: [
           {
-            type: "video/mp4",
-            src:
-              "https://res.cloudinary.com/dlaq5yfxp/video/upload/v1618305819/150716YesMen_synd_768k_vp8_w0dpbg.webm"
+            type: "video/youtube",
+            src: "https://www.youtube.com/watch?v=ySJGjo3_EX4"
           }
         ],
+        techOrder: ["youtube"],
         poster:
           "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg" //Cover image
       }
@@ -65,6 +66,7 @@ export default {
         case "play-event":
           this.myVideoPlayer.play();
           this.myVideoPlayer.currentTime(msg.data.currentTime);
+          this.myVideoPlayer.play();
           break;
         case "pause-event":
           this.myVideoPlayer.pause();
