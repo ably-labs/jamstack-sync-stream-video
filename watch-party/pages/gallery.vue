@@ -1,9 +1,32 @@
 <template>
   <div class="m-5">
+    <p class="gallery-msg">
+      Pick a video you'd like to stream with friends. Either choose from the
+      gallery or paste a YouTube link
+    </p>
     <div class="gallery-header">
-      <p class="gallery-msg">
-        Choose a video you'd like to stream with friends
-      </p>
+      <div class="youtube-input">
+        <input
+          type="text"
+          class="url-input"
+          placeholder="YouTube video URL"
+          v-model="youtubeLink"
+        />
+        <NuxtLink
+          :to="{
+            path: pathToWatchParty,
+            query: {
+              chosenVidType: 'youtube',
+              chosenVidCode: '1234',
+              chosenVideoLink: youtubeLink
+            }
+          }"
+        >
+          <button class="load-btn" @click="loadYouTubeVideo()">
+            LOAD
+          </button>
+        </NuxtLink>
+      </div>
       <div class="copy-code-section">
         <button class="action-btn" @click="copyBtnClicked()">
           {{ btnText }}
@@ -52,7 +75,8 @@ export default {
     return {
       copyClicked: null,
       btnText: "Copy shareable link",
-      pathToWatchParty: null
+      pathToWatchParty: null,
+      youtubeLink: null
     };
   },
   computed: {
@@ -77,12 +101,25 @@ export default {
 
 <style scoped lang="postcss">
 .gallery-header {
-  @apply flex text-left justify-between;
+  @apply text-left justify-between;
 }
 
-.gallery-msg {
-  @apply my-2 text-xs w-40;
+.youtube-input {
+  @apply my-2 text-xs w-full flex;
 }
+
+.url-input {
+  @apply block w-full rounded bg-gray-100 border border-gray-500;
+}
+
+.load-btn {
+  @apply rounded bg-gray-800 p-1 h-full text-white w-40 text-xs;
+}
+
+.load-btn:hover {
+  @apply bg-gray-900;
+}
+
 .action-btn {
   @apply rounded bg-gray-800 p-1 text-white w-40 text-xs;
 }
@@ -92,7 +129,7 @@ export default {
 }
 
 .copy-code-section {
-  @apply flex justify-end mt-2 mb-2;
+  @apply mt-2 mb-2;
 }
 
 .video-gallery {
@@ -114,14 +151,21 @@ export default {
   width: 100%;
 }
 @screen sm {
-  .gallery-msg {
-    @apply w-1/2 text-sm;
+  .youtube-input {
+    @apply w-3/5 mr-2 text-sm;
   }
   .video-gallery {
     @apply grid-cols-2;
   }
   .action-btn {
     @apply w-64;
+  }
+
+  .gallery-header {
+    @apply flex;
+  }
+  .copy-code-section {
+    @apply flex justify-end;
   }
 }
 
@@ -134,12 +178,16 @@ export default {
     @apply rounded bg-gray-800 p-2 text-white w-64 text-base;
   }
 
+  .load-btn {
+    @apply text-base;
+  }
+
   .gallery-header {
     @apply flex text-center justify-between;
   }
 
-  .gallery-msg {
-    @apply p-2 my-auto text-base text-left;
+  .youtube-input {
+    @apply py-2 my-auto text-base text-left;
   }
 }
 </style>
