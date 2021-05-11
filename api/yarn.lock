@@ -2,6 +2,13 @@
 # yarn lockfile v1
 
 
+"@ably/msgpack-js@^0.3.3":
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/@ably/msgpack-js/-/msgpack-js-0.3.4.tgz#21e56e6fc296b469887a622cdbde8874c8b155e2"
+  integrity sha512-gmnsxxcN/8WfoxZxQQF9LvM3ZUbuVH0LCS6oX7EJS+VfkXWBFIgDV+h7a0sntwKSvAEg4uJzNDje7kpH8/LJ3Q==
+  dependencies:
+    bops "^1.0.1"
+
 "@apollo/federation@^0.20.7":
   version "0.20.7"
   resolved "https://registry.yarnpkg.com/@apollo/federation/-/federation-0.20.7.tgz#0d26dcc3bbc92c168dc40d4f407f56d26338ef7a"
@@ -1884,6 +1891,15 @@ abbrev@1:
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"
   integrity sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q==
 
+ably@^1.2.9:
+  version "1.2.9"
+  resolved "https://registry.yarnpkg.com/ably/-/ably-1.2.9.tgz#984c9208ea19f12421f1c2fb36a046011824feb3"
+  integrity sha512-22bl1IIQ+utuUqfi4R/97UAQwB51LZ+JQ101tGbPnz3nqwy5Fsl8utcS4itm/kXOUQ4Cm5YIodv9MCOu0+dCrQ==
+  dependencies:
+    "@ably/msgpack-js" "^0.3.3"
+    request "^2.87.0"
+    ws "^5.1"
+
 accepts@^1.3.5, accepts@~1.3.4, accepts@~1.3.5, accepts@~1.3.7:
   version "1.3.7"
   resolved "https://registry.yarnpkg.com/accepts/-/accepts-1.3.7.tgz#531bc726517a3b2b41f850021c6cc15eaab507cd"
@@ -2509,6 +2525,11 @@ balanced-match@^1.0.0:
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.2.tgz#e83e3a7e3f300b34cb9d87f615fa0cbf357690ee"
   integrity sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==
 
+base64-js@1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.0.2.tgz#474211c95e6cf2a547db461e4f6778b51d08fa65"
+  integrity sha1-R0IRyV5s8qVH20YeT2d4tR0I+mU=
+
 base64-js@^1.0.2, base64-js@^1.3.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.5.1.tgz#1b1b440160a5bf7ad40b650f095963481903930a"
@@ -2669,6 +2690,14 @@ bootstrap@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.6.0.tgz#97b9f29ac98f98dfa43bf7468262d84392552fd7"
   integrity sha512-Io55IuQY3kydzHtbGvQya3H+KorS/M9rSNyfCGCg9WZ4pyT/lCxIlpJgG1GXW/PswzC84Tr2fBYi+7+jFVQQBw==
+
+bops@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/bops/-/bops-1.0.1.tgz#502aaf00ee119db1dbae088e3df4bea2e241dbcc"
+  integrity sha512-qCMBuZKP36tELrrgXpAfM+gHzqa0nLsWZ+L37ncsb8txYlnAoxOPpVp+g7fK0sGkMXfA0wl8uQkESqw3v4HNag==
+  dependencies:
+    base64-js "1.0.2"
+    to-utf8 "0.0.1"
 
 boxen@4.2.0:
   version "4.2.0"
@@ -10794,6 +10823,11 @@ to-regex@^3.0.1, to-regex@^3.0.2:
     regex-not "^1.0.2"
     safe-regex "^1.1.0"
 
+to-utf8@0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/to-utf8/-/to-utf8-0.0.1.tgz#d17aea72ff2fba39b9e43601be7b3ff72e089852"
+  integrity sha1-0Xrqcv8vujm55DYBvns/9y4ImFI=
+
 toggle-selection@^1.0.6:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/toggle-selection/-/toggle-selection-1.0.6.tgz#6e45b1263f2017fa0acc7d89d78b15b8bf77da32"
@@ -11470,7 +11504,7 @@ write-file-atomic@^3.0.0:
     signal-exit "^3.0.2"
     typedarray-to-buffer "^3.1.5"
 
-ws@^5.2.0:
+ws@^5.1, ws@^5.2.0:
   version "5.2.2"
   resolved "https://registry.yarnpkg.com/ws/-/ws-5.2.2.tgz#dffef14866b8e8dc9133582514d1befaf96e980f"
   integrity sha512-jaHFD6PFv6UgoIVda6qZllptQsMlDEJkTQcybzzXDYM1XO9Y8em691FGMPmM46WGyLU4z9KMgQN+qrux/nhlHA==

@@ -162,7 +162,7 @@ const createStore = () => {
       //Ably init
       instantiateAbly(vueContext, { username, isAdmin }) {
         const ablyInstance = new Ably.Realtime({
-          authUrl: "https://ably-auth.glitch.me/auth"
+          authUrl: "http://localhost:1337/auth-ably"
           //          echoMessages: false
         });
         ablyInstance.connection.once("connected", () => {
