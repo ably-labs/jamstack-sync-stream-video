@@ -11,6 +11,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@nuxtjs/apollo": "^4.0.1-rc.5",
+    "@nuxtjs/dotenv": "^1.4.1",
     "@tailwindcss/forms": "^0.2.1",
     "ably": "^1.2.5",
     "apollo-cache-inmemory": "^1.6.6",

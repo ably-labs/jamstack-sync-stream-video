@@ -88,9 +88,9 @@ const createStore = () => {
       getLatestVideoPlayerOptions: state => {
         let latestVideoPlayerOptions = state.defaultVideoPlayerOptions;
         latestVideoPlayerOptions.sources[0].src =
-          "http://localhost:1337" + state.currentVideoStatus.chosenVideoUrl;
+          state.currentVideoStatus.chosenVideoUrl;
         latestVideoPlayerOptions.poster =
-          "http://localhost:1337" + state.currentVideoStatus.chosenVideoThumb;
+          state.currentVideoStatus.chosenVideoThumb;
         return latestVideoPlayerOptions;
       }
     },
@@ -162,7 +162,7 @@ const createStore = () => {
       //Ably init
       instantiateAbly(vueContext, { username, isAdmin }) {
         const ablyInstance = new Ably.Realtime({
-          authUrl: "http://localhost:1337/auth-ably"
+          authUrl: process.env.API_URL + "/auth-ably"
           //          echoMessages: false
         });
         ablyInstance.connection.once("connected", () => {

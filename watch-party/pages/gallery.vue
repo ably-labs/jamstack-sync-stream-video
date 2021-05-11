@@ -9,7 +9,7 @@
     <div class="video-gallery">
       <div v-for="video in videos" :key="video.id" class="video-block">
         <img
-          :src="'http://localhost:1337' + video.thumbnail.url"
+          :src="video.thumbnail.url"
           alt="Video thumbnail"
           width="500"
           height="600"

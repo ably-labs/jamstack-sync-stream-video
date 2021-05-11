@@ -15,7 +15,6 @@ module.exports = {
         const tokenParams = { clientId };
         try {
             const ablyThing = await realtime.auth.createTokenRequest(tokenParams);
-            console.log(ablyThing)
             return ablyThing
         }
         catch (err) {

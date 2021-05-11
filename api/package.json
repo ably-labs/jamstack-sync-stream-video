@@ -13,6 +13,8 @@
   "dependencies": {
     "ably": "^1.2.9",
     "knex": "0.21.18",
+    "pg": "^8.6.0",
+    "pg-connection-string": "^2.5.0",
     "sqlite3": "5.0.0",
     "strapi": "3.5.4",
     "strapi-admin": "3.5.4",
@@ -23,6 +25,7 @@
     "strapi-plugin-graphql": "3.5.4",
     "strapi-plugin-upload": "3.5.4",
     "strapi-plugin-users-permissions": "3.5.4",
+    "strapi-provider-upload-cloudinary": "^3.6.2",
     "strapi-utils": "3.5.4"
   },
   "author": {

@@ -26,7 +26,7 @@ export default {
   components: true,
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
-  buildModules: ["@nuxtjs/tailwindcss", "@nuxtjs/fontawesome"],
+  buildModules: ["@nuxtjs/tailwindcss", "@nuxtjs/fontawesome", "@nuxtjs/dotenv"],
 
   fontawesome: {
     icons: {
@@ -41,7 +41,7 @@ export default {
 apollo: {
   clientConfigs: {
     default: {
-      httpEndpoint: 'http://localhost:1337/graphql',
+      httpEndpoint: process.env.API_URL + '/graphql',
     }
   }
 },
