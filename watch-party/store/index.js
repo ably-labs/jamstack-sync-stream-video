@@ -165,6 +165,8 @@ const createStore = () => {
           authUrl: this.$config.API_URL + "/auth-ably"
           //          echoMessages: false
         });
+        console.log("ABLY AUTH URL FROM NETLIFY");
+        console.log(process.env.API_URL + "/auth-ably");
         ablyInstance.connection.once("connected", () => {
           vueContext.commit("setAblyConnectionStatus", true);
           vueContext.commit("setAblyRealtimeInstance", ablyInstance);
