@@ -25,6 +25,10 @@ export default {
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
 
+  publicRuntimeConfig: {
+    API_URL: process.env.API_URL 
+  },
+
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: ["@nuxtjs/tailwindcss", "@nuxtjs/fontawesome", "@nuxtjs/dotenv"],
 
