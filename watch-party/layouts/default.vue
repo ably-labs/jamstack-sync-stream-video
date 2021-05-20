@@ -17,6 +17,8 @@ html {
   box-sizing: border-box;
   height: 100%;
   width: 100%;
+  background-image: url("../assets/grey-pattern.png");
+  background-repeat: repeat;
 }
 
 *,

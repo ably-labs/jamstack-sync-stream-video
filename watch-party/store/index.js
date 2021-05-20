@@ -193,7 +193,12 @@ const createStore = () => {
 
         //commentsChannel
         const comments = this.state.ablyRealtimeInstance.channels.get(
-          this.state.channelNames.comments + "-" + this.state.watchPartyRoomCode
+          this.state.channelNames.comments +
+            "-" +
+            this.state.watchPartyRoomCode,
+          {
+            params: { rewind: "5m" }
+          }
         );
 
         //videoChannel
@@ -236,15 +241,23 @@ const createStore = () => {
       },
       getExistingAblyPresenceSet(vueContext) {
         this.state.channelInstances.mainParty.presence.get((err, members) => {
+          let isAdminMissing = true;
           if (!err) {
             for (let i = 0; i < members.length; i++) {
               let { username, isAdmin } = members[i].data;
+              if (isAdmin) {
+                isAdminMissing = false;
+              }
               vueContext.commit("setOnlineMembersArrInsert", {
                 clientId: members[i].clientId,
                 username,
                 isAdmin
               });
             }
+            if (isAdminMissing && !vueContext.state.isAdmin) {
+              vueContext.commit("setAdminLeaveStatus");
+            }
+            console.log(members);
             vueContext.commit("setPresenceCount", members.length);
           } else {
             console.log(err);
@@ -276,10 +289,9 @@ const createStore = () => {
       handleExistingMemberLeft(vueContext, member) {
         if (member.data.isAdmin) {
           vueContext.commit("setAdminLeaveStatus");
-        } else {
-          vueContext.commit("setOnlineMembersArrRemoval", member.id);
-          vueContext.commit("setPresenceDecrement");
         }
+        vueContext.commit("setOnlineMembersArrRemoval", member.id);
+        vueContext.commit("setPresenceDecrement");
       },
       enterClientInAblyPresenceSet(vueContext) {
         this.state.channelInstances.mainParty.presence.enter({

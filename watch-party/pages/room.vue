@@ -4,6 +4,7 @@
       class="username-section container"
       v-if="!isUsernameEntered && !getIsAdminStatus"
     >
+      <ProjectTitle></ProjectTitle>
       <div class="block">
         <input
           type="text"
@@ -26,18 +27,25 @@
           Join the watch party
         </button>
       </div>
+      <ProjectReferences></ProjectReferences>
     </div>
     <div class="video-section" v-if="isUsernameEntered || getIsAdminStatus">
       <div class="video-section-column">
         <VideoHeader />
-        <VideoPlayer v-if="showVideo"></VideoPlayer>
-        <div class="force-sync-section" v-if="showVideo && !getIsAdminStatus">
+        <VideoPlayer v-if="showVideo && !getDidAdminLeaveStatus"></VideoPlayer>
+        <div
+          class="force-sync-section"
+          v-if="showVideo && !getIsAdminStatus && !getDidAdminLeaveStatus"
+        >
           <button class="sync-btn" @click="forceSyncWithAdmin()">
             Force sync with admin
             <font-awesome-icon class="avatar " :icon="['fas', 'sync-alt']" />
           </button>
         </div>
-        <div class="force-sync-section" v-if="getIsAdminStatus">
+        <div
+          class="force-sync-section"
+          v-if="getIsAdminStatus && !getDidAdminLeaveStatus"
+        >
           <button
             v-if="getIsAdminStatus"
             class="sync-btn"
@@ -47,9 +55,33 @@
             <font-awesome-icon :icon="['fas', 'copy']" />
           </button>
         </div>
-        <div v-if="!showVideo" class="waiting-msg">
-          Waiting for the admin to choose a video to watch together...Feel free
-          to suggest something in the comments section
+        <div v-if="!showVideo || getDidAdminLeaveStatus" class="waiting-msg">
+          <p v-if="!getDidAdminLeaveStatus">
+            Waiting for the admin to choose a video to watch together.
+            <br /><br />Until then, you can start adding live comments, or check
+            out this project on GitHub:
+          </p>
+          <p v-if="getDidAdminLeaveStatus">
+            Unfortunately, the host of this watch party has left. Show's over!
+            <br /><br />Check out this project on GitHub or
+            <!--todo update url-->
+            <a href="http://localhost:3000/" class="home-link"
+              >go to the main page</a
+            >
+            to host your own watch party
+          </p>
+          <div class="my-5 ml-0">
+            <gh-btns-star
+              slug="ably-labs/jamstack-sync-stream-video"
+              show-count
+              class="gh-btn"
+            ></gh-btns-star>
+            <gh-btns-fork
+              slug="ably-labs/jamstack-sync-stream-video"
+              show-count
+              class="gh-btn"
+            ></gh-btns-fork>
+          </div>
         </div>
       </div>
       <div class="comments-section">
@@ -60,9 +92,10 @@
 </template>
 
 <script>
-import VideoHeader from "../../components/Video/VideoHeader.vue";
-import VideoPlayer from "../../components/Video/VideoPlayer.vue";
-import CommentsList from "../../components/Comments/CommentsList.vue";
+import ProjectReferences from "../components/ProjectReferences.vue";
+import VideoHeader from "../components/Video/VideoHeader.vue";
+import VideoPlayer from "../components/Video/VideoPlayer.vue";
+import CommentsList from "../components/Comments/CommentsList.vue";
 
 import { mapGetters, mapActions, mapMutations } from "vuex";
 export default {
@@ -144,7 +177,7 @@ export default {
       });
       this.publishCurrentVideoStatus("video-chosen");
     } else {
-      this.setWatchPartyRoomCode(this.$route.params.roomCode);
+      this.setWatchPartyRoomCode(this.$route.query.roomCode);
     }
   },
   destroyed() {}
@@ -190,25 +223,45 @@ export default {
 }
 
 .waiting-msg {
-  @apply ml-6 mt-56 mb-56 border border-current;
+  @apply my-10;
 }
 .video-section-column {
   @apply w-full pt-3 px-3 pb-1;
+  background-image: url("../assets/grey-pattern.png");
+  background-repeat: repeat;
 }
 .comments-section {
   @apply w-full overflow-hidden rounded;
 }
 
+.video-section {
+  @apply h-screen;
+  background-image: url("../assets/grey-pattern.png");
+  background-repeat: repeat;
+}
+.gh-btn {
+  float: none;
+  @apply ml-0;
+}
+
+.home-link {
+  @apply text-blue-600;
+}
+
 @screen md {
   .comments-section {
-    @apply w-1/3;
+    @apply w-1/3 bg-gray-200;
+  }
+
+  .waiting-msg {
+    @apply my-48 w-1/2;
   }
 
   .video-section {
     @apply flex;
   }
   .video-section-column {
-    @apply w-2/3 p-6 bg-gray-200 rounded;
+    @apply w-2/3 p-6 rounded;
   }
 
   .sync-btn {
@@ -223,9 +276,14 @@ export default {
 
   .video-section {
     @apply flex;
+    background-image: url("../assets/grey-pattern.png");
+    background-repeat: repeat;
   }
   .video-section-column {
     @apply w-9/12;
+  }
+  .watchpage-refs {
+    @apply border-red-900 border-2 text-center;
   }
 }
 </style>

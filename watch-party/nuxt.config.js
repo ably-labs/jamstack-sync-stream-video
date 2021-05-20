@@ -4,7 +4,7 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: "watch-party",
+    title: "Live watch party - JAMstack",
     htmlAttrs: {
       lang: "en"
     },
@@ -39,8 +39,7 @@ export default {
     }
   },
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ['@nuxtjs/apollo',
-],
+  modules: ["vue-github-buttons/nuxt",'@nuxtjs/apollo'],
 
 apollo: {
   clientConfigs: {
