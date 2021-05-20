@@ -35,12 +35,33 @@ const createStore = () => {
       currentVideoStatus: {
         isVideoChosen: false,
         didStartPlayingVideo: false,
+        chosenVideoUrl: null,
         chosenVideoRef: null,
+        chosenVideoThumb: null,
         currentTime: null,
         isPlaying: false,
         isPaused: false
       },
-      videoPlayerInstance: null
+      videoPlayerInstance: null,
+      defaultVideoPlayerOptions: {
+        //player configuration ml-6 w-11/12 container
+        muted: false, //whether to mute
+        language: "en",
+        fluid: true,
+        // width: "550px",
+        // height: "300px",
+        liveui: true,
+        playbackRates: [0.7, 1.0, 1.5, 2.0], //Playback speed
+        sources: [
+          {
+            type: "video/mp4",
+            src:
+              "https://res.cloudinary.com/dlaq5yfxp/video/upload/v1618305819/150716YesMen_synd_768k_vp8_w0dpbg.webm"
+          }
+        ],
+        poster:
+          "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg" //Cover image
+      }
     },
     getters: {
       getShouldShowShareableCodeStatus: state =>
@@ -59,9 +80,19 @@ const createStore = () => {
       getUsername: state => state.username,
       getDidAdminChooseVideoStatus: state => state.didAdminChooseVideo,
       getChosenVideoRef: state => state.currentVideoStatus.chosenVideoRef,
+      getChosenVideoUrl: state => state.currentVideoStatus.chosenVideoUrl,
+      getChosenVideoThumb: state => state.currentVideoStatus.chosenVideoThumb,
       getDidAdminLeaveStatus: state => state.didAdminLeave,
       getCurrentVideoStatus: state => state.currentVideoStatus,
-      getOnlineMembersArr: state => state.onlineMembersArr
+      getOnlineMembersArr: state => state.onlineMembersArr,
+      getLatestVideoPlayerOptions: state => {
+        let latestVideoPlayerOptions = state.defaultVideoPlayerOptions;
+        latestVideoPlayerOptions.sources[0].src =
+          state.currentVideoStatus.chosenVideoUrl;
+        latestVideoPlayerOptions.poster =
+          state.currentVideoStatus.chosenVideoThumb;
+        return latestVideoPlayerOptions;
+      }
     },
 
     mutations: {
@@ -131,7 +162,7 @@ const createStore = () => {
       //Ably init
       instantiateAbly(vueContext, { username, isAdmin }) {
         const ablyInstance = new Ably.Realtime({
-          authUrl: "https://ably-auth.glitch.me/auth"
+          authUrl: this.$config.API_URL + "/auth-ably"
           //          echoMessages: false
         });
         ablyInstance.connection.once("connected", () => {
@@ -162,7 +193,12 @@ const createStore = () => {
 
         //commentsChannel
         const comments = this.state.ablyRealtimeInstance.channels.get(
-          this.state.channelNames.comments + "-" + this.state.watchPartyRoomCode
+          this.state.channelNames.comments +
+            "-" +
+            this.state.watchPartyRoomCode,
+          {
+            params: { rewind: "5m" }
+          }
         );
 
         //videoChannel

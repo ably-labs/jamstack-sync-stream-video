@@ -1,0 +1,13 @@
+{
+    "routes": [
+      {
+        "method": "GET",
+        "path": "/auth-ably",
+        "handler": "auth-ably.auth",
+        "config": {
+          "policies": []
+        }
+      }
+    ]
+  }
+  

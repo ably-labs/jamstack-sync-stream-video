@@ -14,49 +14,31 @@
       @canplaythrough="onPlayerCanplaythrough($event)"
       @ready="playerReadied"
       @statechanged="playerStateChanged($event)"
-      v-video-player:myVideoPlayer="playerOptions"
+      v-video-player:myVideoPlayer="getLatestVideoPlayerOptions"
     ></div>
   </section>
 </template>
 
 <script>
-import { mapGetters, mapActions, mapMutations } from "vuex";
+import { mapGetters, mapActions, mapMutations, mapState } from "vuex";
 // todo add youtube support with https://github.com/videojs/videojs-youtube
 export default {
   name: "VideoPlayer",
   data() {
     return {
-      playsinline: true,
-      playerOptions: {
-        //player configuration ml-6 w-11/12 container
-        muted: false, //whether to mute
-        language: "en",
-        fluid: true,
-        // width: "550px",
-        // height: "300px",
-        liveui: true,
-        playbackRates: [0.7, 1.0, 1.5, 2.0], //Playback speed
-        sources: [
-          {
-            type: "video/mp4",
-            src:
-              "https://res.cloudinary.com/dlaq5yfxp/video/upload/v1618305819/150716YesMen_synd_768k_vp8_w0dpbg.webm"
-          }
-        ],
-        poster:
-          "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg" //Cover image
-      }
+      playsinline: true
     };
-  },
-  mounted() {
-    this.setVideoPlayerInstance(this.myVideoPlayer);
   },
   computed: {
     ...mapGetters([
       "getIsAdminStatus",
       "getVideoChMessage",
-      "getCurrentVideoStatus"
+      "getCurrentVideoStatus",
+      "getLatestVideoPlayerOptions"
     ])
+  },
+  mounted() {
+    this.setVideoPlayerInstance(this.myVideoPlayer);
   },
   watch: {
     getVideoChMessage: function(msg) {

@@ -92,7 +92,8 @@ export default {
         this.copyClicked = false;
         this.btnText = "Copy shareable link";
       }, 2000);
-      this.shareableLink = this.baseShareLink + this.getWatchPartyRoomCode;
+      this.shareableLink =
+        this.baseShareLink + "?roomCode=" + this.getWatchPartyRoomCode;
       navigator.clipboard.writeText(this.shareableLink);
       this.setShareableLink(this.shareableLink);
     }
