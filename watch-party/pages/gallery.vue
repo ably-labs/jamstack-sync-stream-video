@@ -23,11 +23,12 @@
 
         <NuxtLink
           :to="{
-            path: pathToWatchParty,
+            path: 'room',
             query: {
               chosenVidType: 'db',
               chosenVidCode: '1234',
-              chosenVideoLink: 'someLinktodo'
+              chosenVideoLink: 'someLinktodo',
+              roomCode: getWatchPartyRoomCode
             }
           }"
         >
@@ -51,8 +52,7 @@ export default {
   data() {
     return {
       copyClicked: null,
-      btnText: "Copy shareable link",
-      pathToWatchParty: null
+      btnText: "Copy shareable link"
     };
   },
   computed: {
@@ -68,9 +68,6 @@ export default {
       }, 2000);
       navigator.clipboard.writeText(this.getShareableLink);
     }
-  },
-  created() {
-    this.pathToWatchParty = "room/" + this.getWatchPartyRoomCode;
   }
 };
 </script>

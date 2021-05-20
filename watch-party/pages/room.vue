@@ -92,10 +92,10 @@
 </template>
 
 <script>
-import ProjectReferences from "../../components/ProjectReferences.vue";
-import VideoHeader from "../../components/Video/VideoHeader.vue";
-import VideoPlayer from "../../components/Video/VideoPlayer.vue";
-import CommentsList from "../../components/Comments/CommentsList.vue";
+import ProjectReferences from "../components/ProjectReferences.vue";
+import VideoHeader from "../components/Video/VideoHeader.vue";
+import VideoPlayer from "../components/Video/VideoPlayer.vue";
+import CommentsList from "../components/Comments/CommentsList.vue";
 
 import { mapGetters, mapActions, mapMutations } from "vuex";
 export default {
@@ -175,7 +175,7 @@ export default {
       });
       this.publishCurrentVideoStatus("video-chosen");
     } else {
-      this.setWatchPartyRoomCode(this.$route.params.roomCode);
+      this.setWatchPartyRoomCode(this.$route.query.roomCode);
     }
   },
   destroyed() {}
@@ -225,7 +225,7 @@ export default {
 }
 .video-section-column {
   @apply w-full pt-3 px-3 pb-1;
-  background-image: url("../../assets/grey-pattern.png");
+  background-image: url("../assets/grey-pattern.png");
   background-repeat: repeat;
 }
 .comments-section {
@@ -234,7 +234,7 @@ export default {
 
 .video-section {
   @apply h-screen;
-  background-image: url("../../assets/grey-pattern.png");
+  background-image: url("../assets/grey-pattern.png");
   background-repeat: repeat;
 }
 .gh-btn {
@@ -274,7 +274,7 @@ export default {
 
   .video-section {
     @apply flex;
-    background-image: url("../../assets/grey-pattern.png");
+    background-image: url("../assets/grey-pattern.png");
     background-repeat: repeat;
   }
   .video-section-column {

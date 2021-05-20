@@ -162,7 +162,12 @@ const createStore = () => {
 
         //commentsChannel
         const comments = this.state.ablyRealtimeInstance.channels.get(
-          this.state.channelNames.comments + "-" + this.state.watchPartyRoomCode
+          this.state.channelNames.comments +
+            "-" +
+            this.state.watchPartyRoomCode,
+          {
+            params: { rewind: "5m" }
+          }
         );
 
         //videoChannel
