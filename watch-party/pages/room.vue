@@ -171,7 +171,9 @@ export default {
       this.showVideo = true;
       this.setVideoStatusUpdate({
         isVideoChosen: true,
-        chosenVideoRef: this.$route.params.chosenVideoRef
+        chosenVideoRef: this.$route.query.chosenVidRef,
+        chosenVideoUrl: this.$route.query.chosenVidUrl,
+        chosenVideoThumb: this.$route.query.chosenVidThumb,
       });
       this.publishCurrentVideoStatus("video-chosen");
     } else {

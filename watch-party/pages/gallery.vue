@@ -12,9 +12,9 @@
       </div>
     </div>
     <div class="video-gallery">
-      <div v-for="index in 10" :key="index" class="video-block">
+      <div v-for="video in videos" :key="video.id" class="video-block">
         <img
-          src="../assets/vid-thumbnail.png"
+          :src="video.thumbnail.url"
           alt="Video thumbnail"
           width="500"
           height="600"
@@ -26,19 +26,19 @@
             path: 'room',
             query: {
               chosenVidType: 'db',
+              chosenVidRef: video.id,
               chosenVidCode: '1234',
               chosenVideoLink: 'someLinktodo',
-              roomCode: getWatchPartyRoomCode
-            }
+              roomCode: getWatchPartyRoomCode,
+              chosenVidUrl: video.video.url,
+              chosenVidThumb: video.thumbnail.url,
+            },
           }"
         >
-          <p class="video-title">
-            Apollo Command and Service Module Animation
-          </p>
+          <p class="video-title">{{ video.title }}</p>
         </NuxtLink>
         <p class="video-description">
-          Animation of the Command and Service Module (CSM) of the Apollo space
-          program, spinning against an animated background of the world.
+          {{ video.description }}
         </p>
       </div>
     </div>
@@ -47,16 +47,19 @@
 
 <script>
 import { mapGetters, mapActions, mapMutations } from "vuex";
+import gql from "graphql-tag";
 
 export default {
   data() {
     return {
       copyClicked: null,
-      btnText: "Copy shareable link"
+      btnText: "Copy shareable link",
+      pathToWatchParty: null,
+      videos: []
     };
   },
   computed: {
-    ...mapGetters(["getShareableLink", "getWatchPartyRoomCode"])
+    ...mapGetters(["getShareableLink", "getWatchPartyRoomCode"]),
   },
   methods: {
     copyBtnClicked() {
@@ -68,6 +71,28 @@ export default {
       }, 2000);
       navigator.clipboard.writeText(this.getShareableLink);
     }
+  },
+  apollo: {
+    videos: {
+      query: gql`
+        query {
+          videos {
+            id
+            title
+            thumbnail {
+              url
+            }
+            description
+            video {
+              url
+            }
+          }
+        }
+      `
+    }
+  },
+  created() {
+    this.pathToWatchParty = "room/" + this.getWatchPartyRoomCode;
   }
 };
 </script>
