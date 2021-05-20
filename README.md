@@ -24,3 +24,10 @@ Frameworks and Libraries
 3. [Ably](https://ably.com/) - A scalable pub/sub messaging platform.
 4. [Netlify](https://www.netlify.com/) - A serverless platform to build, deploy, and collaborate on web apps.
 
+### App architecture
+
+![Realtime watch party app architecture](https://user-images.githubusercontent.com/5900152/118970089-76396e00-b98b-11eb-954d-631fe561c318.png)
+
+### Tutorials and other resources
+
+TBD
