@@ -2,6 +2,8 @@
 
 This project demonstrates realtime messaging in Jamstack apps. Dubbed as a 'live watch party', this app allows a host to create a private watch party room, invite friends to it and watch videos together. They can also share live comments and see who's participating (online) in the party.
 
+You can try it yourself at https://jamstack-watch-party.ably.dev/.
+
 
 <img width="1415" alt="Watch party homepage" src="https://user-images.githubusercontent.com/5900152/118952645-bd1e6800-b979-11eb-9a54-288fa04615c9.png">
 
@@ -13,6 +15,18 @@ The host is able to choose a video from the available library.
  The host also has full control of the video playback for all participants, including play, pause and seek events.
 
 <img width="1432" alt="Screenshot 2021-05-07 at 20 01 47" src="https://user-images.githubusercontent.com/5900152/118953174-361dbf80-b97a-11eb-9bdb-b1eb57079fe7.png">
+
+
+### How to run this locally
+
+```
+$ cd watch-party
+$ npm install
+$ npm run dev
+```
+
+Go to the browser and open http://localhost:3000/ and follow the flow.
+
 
 ### The tech stack
 
@@ -28,6 +42,6 @@ Frameworks and Libraries
 
 ![Realtime watch party app architecture](https://user-images.githubusercontent.com/5900152/118970089-76396e00-b98b-11eb-954d-631fe561c318.png)
 
-### Tutorials and other resources
+### Resources
 
 TBD
