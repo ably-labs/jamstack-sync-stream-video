@@ -19,6 +19,18 @@ The host is able to choose a video from the available library.
 
 ### How to run this locally
 
+
+Start your Strapi Server 
+
+```
+$ cd api
+$ npm install
+$ npm run develop
+```
+
+Before you can get things working, head to http://localhost:1337/admin, create a new user and log into your Admin to add videos! Make sure you go to your **User Permissions** > Roles > **Public Role** > click the _find_ and _find_ one checkboxes under videos as well as the _auth_ checkbox under ably-auth. 
+
+Start your Nuxt App 
 ```
 $ cd watch-party
 $ npm install
