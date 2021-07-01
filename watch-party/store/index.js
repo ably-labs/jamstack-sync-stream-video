@@ -1,5 +1,6 @@
 import Vuex from "vuex";
 import * as Ably from "ably";
+import videojs from "videojs-youtube";
 
 const createStore = () => {
   return new Vuex.Store({
@@ -33,6 +34,7 @@ const createStore = () => {
       didAdminLeave: false,
       onlineMembersArr: [],
       currentVideoStatus: {
+        chosenVidType: null,
         isVideoChosen: false,
         didStartPlayingVideo: false,
         chosenVideoUrl: null,
@@ -51,7 +53,6 @@ const createStore = () => {
         // width: "550px",
         // height: "300px",
         liveui: true,
-        playbackRates: [0.7, 1.0, 1.5, 2.0], //Playback speed
         sources: [
           {
             type: "video/mp4",
@@ -91,6 +92,10 @@ const createStore = () => {
           state.currentVideoStatus.chosenVideoUrl;
         latestVideoPlayerOptions.poster =
           state.currentVideoStatus.chosenVideoThumb;
+        if (state.currentVideoStatus.chosenVidType === "youtube") {
+          latestVideoPlayerOptions.sources[0].type = "video/youtube";
+          latestVideoPlayerOptions.techOrder = ["youtube"];
+        }
         return latestVideoPlayerOptions;
       }
     },

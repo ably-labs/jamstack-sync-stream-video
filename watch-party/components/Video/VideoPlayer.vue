@@ -47,6 +47,7 @@ export default {
         case "play-event":
           this.myVideoPlayer.play();
           this.myVideoPlayer.currentTime(msg.data.currentTime);
+          this.myVideoPlayer.play();
           break;
         case "pause-event":
           this.myVideoPlayer.pause();
